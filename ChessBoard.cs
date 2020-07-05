@@ -22,23 +22,23 @@ namespace Project2048
             BitBoard = board;
         }
         #region const and static
-        private const int maxRow = Settings.RowCount;
-        private const int maxCol = Settings.ColCount;
+        public static readonly int[] AddLevels = { 1, 2 };
+        public const double LevelTwoPossibility = 0.1;
+        public const int LineMaxValue = 65536;
+
+        private const int maxRow = 4;
+        private const int maxCol = 4;
         private const int boardSize = maxRow * maxCol;
-        private const float levelTwoPossibility = Settings.LevelTwoPossiblity;
-        private static readonly int[] addLevels = Chess.AddLevels;
         private static readonly Direction[] directions = Settings.Directions;
-        public static readonly Position[] InBoardPositions =
+        private static readonly Position[] InBoardPositions =
         {
             new Position(0,0), new Position(0,1), new Position(0,2), new Position(0,3),
             new Position(1,0), new Position(1,1), new Position(1,2), new Position(1,3),
             new Position(2,0), new Position(2,1), new Position(2,2), new Position(2,3),
             new Position(3,0), new Position(3,1), new Position(3,2), new Position(3,3),
         };
-        private const int LineMaxValue = 65536;
+
         private const int LevelMask = 0xF;
-        private const Board ColMask = 0x000F000F000F000FUL;
-        private const Board RowMask = 0xFFFFUL;
         private static readonly Line[] moveLeftLines = new Line[LineMaxValue];
         private static readonly Line[] moveRightLines = new Line[LineMaxValue];
         private static readonly Board[] moveUpLines = new Board[LineMaxValue];
@@ -255,7 +255,7 @@ namespace Project2048
         private int RandomLevel()
         {
             int number = RandomGenerator.Next(10);
-            return number < levelTwoPossibility * 10 ? addLevels[1] : addLevels[0];
+            return number < LevelTwoPossibility * 10 ? AddLevels[1] : AddLevels[0];
         }
 
         public List<Position> CalculateAndGetEmptyPositions()

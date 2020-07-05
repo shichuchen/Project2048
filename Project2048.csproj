@@ -41,7 +41,6 @@
     <Compile Include="BitBoardHandler.cs" />
     <Compile Include="CacheStatus.cs" />
     <Compile Include="Candidates.cs" />
-    <Compile Include="Chess.cs" />
     <Compile Include="ChessBoard.cs" />
     <Compile Include="Evaluator.cs" />
     <Compile Include="AlphaBetaAI.cs" />

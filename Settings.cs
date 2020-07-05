@@ -14,13 +14,8 @@
         {
             Direction.Up, Direction.Down, Direction.Left, Direction.Right,
         };
+
         public const int MaxSearchMilliSecs = 100;
-
-        public const int RowCount = 4;
-        public const int ColCount = 4;
-        public const float LevelTwoPossiblity = 0.1f;
-        public const int redAlertEmptyCount = 4;
-
 
         public const int MaxRound = 100;
         public const bool PrintProcess = false;

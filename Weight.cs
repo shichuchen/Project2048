@@ -6,14 +6,11 @@
     /// </summary>
     public class Weight : NamedDouble
     {
-        //public Weight(double value) : base(value){}
         public Weight(double value, double min, double max) : base(value)
         {
             Min = min;
             Max = max;
         }
-        // 不允许直接赋值
-        //public static implicit operator Weight(double value) { return new Weight(value); }
         public double Min;
         public double Max;
         /// <summary>

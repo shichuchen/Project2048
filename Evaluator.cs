@@ -7,15 +7,15 @@ namespace Project2048
     /// 处理棋盘评估的分数
     /// </summary>
     public class Evaluator
-    {   
+    {
         static Evaluator()
         {
             CacheLineWeights();
         }
         public static readonly Weights weights = new Weights();
         public const double Infinity = double.MaxValue;
-        public const double LostPenality = -Infinity/ 3;
-        private const int LineMaxValue = 65536;
+        public const double LostPenality = -Infinity / 3;
+        private const int LineMaxValue = ChessBoard.LineMaxValue;
         private static readonly double[] moveScores = new double[LineMaxValue];
         private static readonly double[] addScores = new double[LineMaxValue];
         /// <summary>
@@ -23,54 +23,93 @@ namespace Project2048
         /// </summary>
         public static void CacheLineWeights()
         {
-            double sumPower = weights.SumPower;
+            //double sumPower = weights.SumPower;
             for (int line = 0; line < LineMaxValue; ++line)
             {
-                var levels = BitBoardHandler.ToLevels((Line)line);
-                double lineSum = 0;
-                double lineEmpty = 0;
-                double lineMerges = 0;
+                //var levels = BitBoardHandler.ToLevels((Line)line);
+                //double lineSum = 0;
+                //double lineEmpty = 0;
+                //double lineMerges = 0;
 
-                int preLevel = 0;
-                int counter = 0;
-                for (int i = 0; i < 4; ++i)
-                {
-                    int level = levels[i];
-                    lineSum += Math.Pow(level, sumPower);
-                    if (level == 0)
-                    {
-                        ++lineEmpty;
-                    }
-                    else
-                    {
-                        if (preLevel == level)
-                        {
-                            ++counter;
-                        }
-                        else if (counter > 0)
-                        {
-                            lineMerges += (1 + counter);
-                            counter = 0;
-                        }
-                        preLevel = level;
-                    }
-                }
-                if (counter > 0)
-                {
-                    lineMerges += (1 + counter);
-                }
-
+                //int preLevel = 0;
+                //int counter = 0;
+                //for (int i = 0; i < 4; ++i)
+                //{
+                //    int level = levels[i];
+                //    lineSum += Math.Pow(level, sumPower);
+                //    if (level == 0)
+                //    {
+                //        ++lineEmpty;
+                //    }
+                //    else
+                //    {
+                //        if (preLevel == level)
+                //        {
+                //            ++counter;
+                //        }
+                //        else if (counter > 0)
+                //        {
+                //            lineMerges += (1 + counter);
+                //            counter = 0;
+                //        }
+                //        preLevel = level;
+                //    }
+                //}
+                //if (counter > 0)
+                //{
+                //    lineMerges += (1 + counter);
+                //}
+                GetCacheLineEmptySumMerges(line);
                 GetCacheLineMono(line);
-                moveScores[line] =
-                    lineEmpty * weights.EmptyWeight
-                    + lineMerges * weights.MergeWeight
-                    - GetCacheLineMono(line)
-                    - lineSum * weights.SumWeight;
+                //moveScores[line] =
+                //    lineEmpty * weights.EmptyWeight
+                //    + lineMerges * weights.MergeWeight
+                //    - lineSum * weights.SumWeight;
                 CacheLineSmooth(line);
             }
         }
+        private static void GetCacheLineEmptySumMerges(int line)
+        {
+            double sumPower = weights.SumPower;
+            int[] levels = BitBoardHandler.ToLevels((Line)line);
+            double lineSum = 0;
+            double lineEmpty = 0;
+            double lineMerges = 0;
 
-        private static double GetCacheLineMono(int line)
+            int preLevel = 0;
+            int counter = 0;
+            for (int i = 0; i < 4; ++i)
+            {
+                int level = levels[i];
+                lineSum += Math.Pow(level, sumPower);
+                if (level == 0)
+                {
+                    ++lineEmpty;
+                }
+                else
+                {
+                    if (preLevel == level)
+                    {
+                        ++counter;
+                    }
+                    else if (counter > 0)
+                    {
+                        lineMerges += (1 + counter);
+                        counter = 0;
+                    }
+                    preLevel = level;
+                }
+            }
+            if (counter > 0)
+            {
+                lineMerges += (1 + counter);
+            }
+            moveScores[line] +=
+                    lineEmpty * weights.EmptyWeight
+                    + lineMerges * weights.MergeWeight
+                    - lineSum * weights.SumWeight;
+        }
+        private static void GetCacheLineMono(int line)
         {
             double monoPower = weights.MoveMonoPower;
             var levels = BitBoardHandler.ToLevels((Line)line);
@@ -87,7 +126,7 @@ namespace Project2048
                     lineMonoRight += Math.Pow(levels[i], monoPower) - Math.Pow(levels[i - 1], monoPower);
                 }
             }
-            return Math.Min(lineMonoLeft, lineMonoRight) * weights.MonoWeight;
+            moveScores[line] -= Math.Min(lineMonoLeft, lineMonoRight) * weights.MonoWeight;
         }
 
         private static void CacheLineSmooth(int line)

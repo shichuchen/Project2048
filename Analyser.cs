@@ -6,7 +6,6 @@ namespace Project2048
 {
     class Analyser : IMoveTracker, IRoundTracker, ICompleteTracker
     {
-        private static readonly int[] values = Chess.Values;
         private const int maxRound = Settings.MaxRound;
         private readonly Dictionary<int, int> valueCountMap = new Dictionary<int, int>();
         private TimeRecorder roundTimeRecorder;

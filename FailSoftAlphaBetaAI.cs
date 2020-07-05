@@ -15,7 +15,7 @@ namespace Project2048
         }
         private ChessBoard chessBoard;
         private static readonly Direction[] directions = Settings.Directions;
-        private static readonly int[] addLevels = Chess.AddLevels;
+        private static readonly int[] addLevels = ChessBoard.AddLevels;
         private const double infinity = Evaluator.Infinity;
         private const double lostPenality = Evaluator.LostPenality;
         private Direction bestDirection = Direction.None;
@@ -23,13 +23,29 @@ namespace Project2048
         {
             throw new NotImplementedException();
         }
-        public double MoveStateEvaluation(int depth, double alpha, double beta)
-        {
-            throw new NotImplementedException();
-        }
-        public double AddStateEvaluation(int depth, double alpha, double beta)
-        {
-            throw new NotImplementedException();
-        }
+        //public double MoveStateEvaluation(int depth, double alpha, double beta)
+        //{
+        //    if(depth == 0)
+        //    {
+        //        return -Evaluator.EvalForMove(chessBoard);
+        //    }
+        //    foreach(Direction direction in directions)
+        //    {
+        //        var newBoard = chessBoard.Copy();
+        //        if(newBoard.Move(direction))
+        //    }
+        //}
+        //public double AddStateEvaluation(int depth, double alpha, double beta)
+        //{
+        //    if (depth == 0)
+        //    {
+        //        return -Evaluator.EvalForMove(chessBoard);
+        //    }
+        //    foreach (Direction direction in directions)
+        //    {
+        //        var newBoard = chessBoard.Copy();
+        //        if (newBoard.Move(direction))
+        //    }
+        //}
     }
 }

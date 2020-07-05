@@ -4,8 +4,8 @@
     class ExpectimaxAI : IPlayer
     {
         private static readonly Direction[] directions = Settings.Directions;
-        private static readonly int[] addLevels = Chess.AddLevels;
-        private static readonly float levelTwoPossibility = Settings.LevelTwoPossiblity;
+        private static readonly int[] addLevels = ChessBoard.AddLevels;
+        private static readonly double levelTwoPossibility = ChessBoard.LevelTwoPossibility;
         public ExpectimaxAI(ChessBoard chessBoard)
         {
             this.chessBoard = chessBoard;

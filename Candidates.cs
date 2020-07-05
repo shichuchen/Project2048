@@ -24,7 +24,7 @@ namespace Project2048
         }
 
         private double minEval = double.MaxValue;
-        private static readonly int[] addLevels = Chess.AddLevels;
+        private static readonly int[] addLevels = ChessBoard.AddLevels;
         public int[] Levels { get { return addLevels; } }
         private void ChooseAnnoyingChess(ChessBoard chessBoard)
         {

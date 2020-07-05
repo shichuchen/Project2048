@@ -8,9 +8,12 @@ namespace Project2048MSTest
 
         public static int RandomLevel()
         {
-            return RandomGenerator.Next(16);
+            return RandomGenerator.Next(1, 16);
         }
-
+        public static int[] GetRandomDistinctLevels(int count)
+        {
+            return RandomGenerator.GetDistinctInts(count, 1, 16);
+        }
         public static void RandomCountAddLevelOne(ChessBoard chessBoard)
         {
             int occupyCount = RandomGenerator.Next(chessBoard.EmptyCount);
