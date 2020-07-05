@@ -6,6 +6,7 @@
         private static readonly Direction[] directions = Settings.Directions;
         private static readonly int[] addLevels = ChessBoard.AddLevels;
         private static readonly double levelTwoPossibility = ChessBoard.LevelTwoPossibility;
+        private const double lostPenality = - Evaluator.Infinity / 3;
         public ExpectimaxAI(ChessBoard chessBoard)
         {
             this.chessBoard = chessBoard;
@@ -59,7 +60,7 @@
             {
                 return Evaluator.EvalForMove(chessBoard);
             }
-            double maxValue = -Evaluator.LostPenality;
+            double maxValue = lostPenality;
             foreach (Direction direction in directions)
             {
                 var newBoard = chessBoard.Copy();

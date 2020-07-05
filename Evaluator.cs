@@ -14,7 +14,6 @@ namespace Project2048
         }
         public static readonly Weights weights = new Weights();
         public const double Infinity = double.MaxValue;
-        public const double LostPenality = -Infinity / 3;
         private const int LineMaxValue = ChessBoard.LineMaxValue;
         private static readonly double[] moveScores = new double[LineMaxValue];
         private static readonly double[] addScores = new double[LineMaxValue];
@@ -23,48 +22,10 @@ namespace Project2048
         /// </summary>
         public static void CacheLineWeights()
         {
-            //double sumPower = weights.SumPower;
             for (int line = 0; line < LineMaxValue; ++line)
             {
-                //var levels = BitBoardHandler.ToLevels((Line)line);
-                //double lineSum = 0;
-                //double lineEmpty = 0;
-                //double lineMerges = 0;
-
-                //int preLevel = 0;
-                //int counter = 0;
-                //for (int i = 0; i < 4; ++i)
-                //{
-                //    int level = levels[i];
-                //    lineSum += Math.Pow(level, sumPower);
-                //    if (level == 0)
-                //    {
-                //        ++lineEmpty;
-                //    }
-                //    else
-                //    {
-                //        if (preLevel == level)
-                //        {
-                //            ++counter;
-                //        }
-                //        else if (counter > 0)
-                //        {
-                //            lineMerges += (1 + counter);
-                //            counter = 0;
-                //        }
-                //        preLevel = level;
-                //    }
-                //}
-                //if (counter > 0)
-                //{
-                //    lineMerges += (1 + counter);
-                //}
                 GetCacheLineEmptySumMerges(line);
                 GetCacheLineMono(line);
-                //moveScores[line] =
-                //    lineEmpty * weights.EmptyWeight
-                //    + lineMerges * weights.MergeWeight
-                //    - lineSum * weights.SumWeight;
                 CacheLineSmooth(line);
             }
         }

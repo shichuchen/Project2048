@@ -33,7 +33,7 @@ namespace Project2048
                         gameManager.OnEachRoundEnd(chessBoard);
                         break;
                     }
-                    var ai = new AlphaBetaAI(chessBoard);
+                    var ai = new FailSoftAlphaBetaAI(chessBoard);
                     gameManager.OnEachMoveStart(chessBoard);
                     Direction direction = ai.GetMoveDirection();
                     gameManager.OnEachMoveEnd(chessBoard);

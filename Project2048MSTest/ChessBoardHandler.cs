@@ -10,6 +10,11 @@ namespace Project2048MSTest
         {
             return RandomGenerator.Next(1, 16);
         }
+        public static int[] GetRandomCountDistinctLevels()
+        {   
+            int count = RandomGenerator.Next(16);
+            return GetRandomDistinctLevels(count);
+        }
         public static int[] GetRandomDistinctLevels(int count)
         {
             return RandomGenerator.GetDistinctInts(count, 1, 16);

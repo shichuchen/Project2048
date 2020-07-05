@@ -48,7 +48,6 @@ namespace Project2048
 
 
         public Board BitBoard { get; private set; } = 0;
-        public List<int> IncludedValues { get; private set; }
         public int Score
         {
             get
@@ -65,6 +64,20 @@ namespace Project2048
                     return boardSize;
                 }
                 return GetEmptyCount();
+            }
+        }
+        public int MaxValue
+        {
+            get
+            {
+                return GetMaxValue();
+            }
+        }
+        public int DistinctCount
+        {
+            get
+            {
+                return GetDistinctValuesCount();
             }
         }
         public override bool Equals(object other)
@@ -279,16 +292,32 @@ namespace Project2048
             }
             return EmptyPositions;
         }
-        public void CalculateValues()
+        private int GetMaxValue()
         {
-            IncludedValues = new List<int>();
+            var temp = BitBoard;
+            int maxLevel = 0;
+            while(temp > 0)
+            {
+                int level = (int)(temp & LevelMask);
+                if(level > maxLevel)
+                {
+                    maxLevel = level;
+                }
+                temp >>= 4;
+            }
+            return ToValue(maxLevel);
+        }
+        private int GetDistinctValuesCount()
+        {
+            HashSet<int> distinctLevels = new HashSet<int>();
             var temp = BitBoard;
             while (temp > 0)
             {
                 int level = (int)(temp & LevelMask);
-                IncludedValues.Add(ToValue(level));
+                distinctLevels.Add(level);
                 temp >>= 4;
             }
+            return distinctLevels.Count;
         }
         private int ToValue(int level)
         {

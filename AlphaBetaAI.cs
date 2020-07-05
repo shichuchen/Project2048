@@ -8,6 +8,7 @@ namespace Project2048
     public class AlphaBetaAI : IPlayer
     {
         private const double infinity = Evaluator.Infinity;
+        private const double lostPenality = -infinity / 3;
         private const double bound = infinity / 2;
         public class SearchState
         {
@@ -49,10 +50,7 @@ namespace Project2048
             }
             private void InitDepth(ChessBoard chessBoard)
             {
-                chessBoard.CalculateValues();
-                var distinctValues = chessBoard.IncludedValues.ToHashSet();
-                int distinctCount = distinctValues.Count;
-                TargetDepth = Math.Max(minDepth, (distinctCount - 2) * 2);
+                TargetDepth = Math.Max(minDepth, (chessBoard.DistinctCount - 2) * 2);
             }
             public void StartTimeRecord()
             {
@@ -128,7 +126,6 @@ namespace Project2048
             }
             private bool TryAddBitBoard(ChessBoard chessBoard)
             {
-                // return true;
                 var bitBoard = chessBoard;
                 var transposeRight = chessBoard.ToTransposeRight();
                 var transposeLeft = chessBoard.ToTransposeLeft();
@@ -236,7 +233,7 @@ namespace Project2048
         {
             if (chessBoard.IsGameOver())
             {
-                return Evaluator.LostPenality - searchState.Depth;
+                return lostPenality - searchState.Depth;
             }
             if (searchState.Turn % 2 == 0)
             {
