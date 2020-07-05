@@ -83,7 +83,7 @@ namespace Project2048
             {
                 return -Evaluator.EvalForMove(chessBoard);
             }
-            var emptyPositions = chessBoard.CalculateAndGetEmptyPositions();
+            var emptyPositions = chessBoard.GetEmptyPositions();
             foreach (int level in addLevels)
             {
                 foreach (Position position in emptyPositions)

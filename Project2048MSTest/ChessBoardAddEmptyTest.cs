@@ -14,7 +14,7 @@ namespace Project2048MSTest
         {
             ChessBoard chessBoard = new ChessBoard();
             ChessBoard newBoard = new ChessBoard(chessBoard);
-            List<Position> emptyPositions = chessBoard.CalculateAndGetEmptyPositions();
+            List<Position> emptyPositions = chessBoard.GetEmptyPositions();
             int[] emptyIndices = RandomGenerator.GetDistinctInts(2, chessBoard.EmptyCount);
 
             chessBoard.AddNew(emptyPositions[emptyIndices[0]], 2);
@@ -49,7 +49,7 @@ namespace Project2048MSTest
                 int occupyCount = RandomGenerator.Next(16);
 
                 ChessBoardHandler.RandomAddLevelOne(chessBoard, occupyCount);
-                List<Position> emptyPositions = chessBoard.CalculateAndGetEmptyPositions();
+                List<Position> emptyPositions = chessBoard.GetEmptyPositions();
 
                 Assert.AreEqual(emptyPositions.Count, 16 - occupyCount);
                 Assert.AreEqual(chessBoard.EmptyCount, 16 - occupyCount);
@@ -79,7 +79,7 @@ namespace Project2048MSTest
         public void RandomAddNewSetEmptyTest()
         {
             ChessBoard addEmptyBoard = new ChessBoard();
-            var emptyPositions = addEmptyBoard.CalculateAndGetEmptyPositions();
+            var emptyPositions = addEmptyBoard.GetEmptyPositions();
             int occupyCount = RandomGenerator.Next(emptyPositions.Count);
             for (int i = 0; i < occupyCount; ++i)
             {

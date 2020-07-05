@@ -38,7 +38,7 @@
                 return Evaluator.EvalForMove(chessBoard);
             }
             double result = Evaluator.EvalForMove(chessBoard);
-            var emptyPositions = chessBoard.CalculateAndGetEmptyPositions();
+            var emptyPositions = chessBoard.GetEmptyPositions();
             foreach (int level in addLevels)
             {
                 foreach (Position position in emptyPositions)

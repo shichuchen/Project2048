@@ -5,10 +5,10 @@ using System.Linq;
 namespace Project2048
 {
     using Direction = Settings.Direction;
-    using Board = UInt64;
     public class AlphaBetaAI : IPlayer
     {
         private const double infinity = Evaluator.Infinity;
+        private const double bound = infinity / 2;
         public class SearchState
         {
             public SearchState() { }
@@ -29,8 +29,8 @@ namespace Project2048
 
             public int Depth { get; set; } = 1;
             public int Turn { get; set; } = 0;
-            public double Alpha { get; set; } = -infinity / 2;
-            public double Beta { get; set; } = infinity / 2;
+            public double Alpha { get; set; } = -bound;
+            public double Beta { get; set; } = bound;
             public Direction BestDirection
             {
                 get { return directionStatus.BestDecision; }
@@ -46,7 +46,6 @@ namespace Project2048
                 CutOff = 0;
                 StartTimeRecord();
                 InitDepth(chessBoard);
-                bitBoards = new HashSet<ChessBoard>();
             }
             private void InitDepth(ChessBoard chessBoard)
             {
@@ -75,8 +74,8 @@ namespace Project2048
             public void SetNextRound()
             {
                 ++Depth;
-                Alpha = -infinity;
-                Beta = infinity;
+                Alpha = -bound;
+                Beta = bound;
             }
             public void BuildMoveStatus(ChessBoard chessBoard)
             {

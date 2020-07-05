@@ -18,7 +18,7 @@ namespace Project2048
         }
         private void AllIn(ChessBoard chessBoard)
         {
-            var emptyPositions = chessBoard.CalculateAndGetEmptyPositions();
+            var emptyPositions = chessBoard.GetEmptyPositions();
             this[addLevels[0]] = new List<Position>(emptyPositions);
             this[addLevels[1]] = new List<Position>(emptyPositions);
         }
@@ -28,7 +28,7 @@ namespace Project2048
         public int[] Levels { get { return addLevels; } }
         private void ChooseAnnoyingChess(ChessBoard chessBoard)
         {
-            var emptyPositions = chessBoard.CalculateAndGetEmptyPositions();
+            var emptyPositions = chessBoard.GetEmptyPositions();
             foreach (int level in addLevels)
             {
                 foreach (Position position in emptyPositions)

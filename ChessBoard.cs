@@ -48,7 +48,6 @@ namespace Project2048
 
 
         public Board BitBoard { get; private set; } = 0;
-        public List<Position> EmptyPositions { get; private set; }
         public List<int> IncludedValues { get; private set; }
         public int Score
         {
@@ -244,7 +243,16 @@ namespace Project2048
         }
         private Position RandomPosition()
         {
-            CalculateEmptyPostions();
+            var EmptyPositions = new List<Position>();
+            var temp = BitBoard;
+            foreach (Position position in InBoardPositions)
+            {
+                if ((temp & LevelMask) == 0)
+                {
+                    EmptyPositions.Add(position);
+                }
+                temp >>= 4;
+            }
             int randomIndex = RandomGenerator.Next(EmptyPositions.Count);
             return EmptyPositions[randomIndex];
         }
@@ -257,15 +265,9 @@ namespace Project2048
             int number = RandomGenerator.Next(10);
             return number < LevelTwoPossibility * 10 ? AddLevels[1] : AddLevels[0];
         }
-
-        public List<Position> CalculateAndGetEmptyPositions()
+        public List<Position> GetEmptyPositions()
         {
-            CalculateEmptyPostions();
-            return EmptyPositions;
-        }
-        public void CalculateEmptyPostions()
-        {
-            EmptyPositions = new List<Position>();
+            var EmptyPositions = new List<Position>();
             var temp = BitBoard;
             foreach (Position position in InBoardPositions)
             {
@@ -275,6 +277,7 @@ namespace Project2048
                 }
                 temp >>= 4;
             }
+            return EmptyPositions;
         }
         public void CalculateValues()
         {

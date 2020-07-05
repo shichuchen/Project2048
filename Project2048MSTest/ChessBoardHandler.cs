@@ -22,7 +22,7 @@ namespace Project2048MSTest
 
         public static void RandomAddLevelOne(ChessBoard chessBoard, int count)
         {
-            var emptyPositions = chessBoard.CalculateAndGetEmptyPositions();
+            var emptyPositions = chessBoard.GetEmptyPositions();
             int occupyCount = Math.Min(count, chessBoard.EmptyCount);
             var levels = RandomGenerator.GetDistinctInts(occupyCount, 1, 16);
             for (int i = 0; i < occupyCount; ++i)
@@ -42,7 +42,7 @@ namespace Project2048MSTest
         {
             var oneSideCount = RandomGenerator.Next(1, 6);
             var levels = RandomGenerator.GetDistinctInts(oneSideCount, 1, 16);
-            var emptyPositions = chessBoard.CalculateAndGetEmptyPositions();
+            var emptyPositions = chessBoard.GetEmptyPositions();
             int occupyCount = Math.Min(oneSideCount, chessBoard.EmptyCount / 2);
             for (int i = 0; i < occupyCount; ++i)
             {
@@ -63,7 +63,7 @@ namespace Project2048MSTest
         {
             var oneSideCount = RandomGenerator.Next(1, 6);
             var levels = RandomGenerator.GetDistinctInts(oneSideCount, 1, 16);
-            var emptyPositions = chessBoard.CalculateAndGetEmptyPositions();
+            var emptyPositions = chessBoard.GetEmptyPositions();
             int occupyCount = Math.Min(oneSideCount, chessBoard.EmptyCount / 2);
             for (int i = 0; i < occupyCount; ++i)
             {
