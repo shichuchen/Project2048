@@ -5,10 +5,22 @@ using System.Linq;
 namespace Project2048
 {
     using Direction = Settings.Direction;
-    using Board = UInt64;
     public class AlphaBetaAI : IPlayer
     {
         private const double infinity = Evaluator.Infinity;
+        public class HashItem
+        {
+            public HashItem(ChessBoard chessBoard)
+            {
+                this.chessBoard = chessBoard;
+            }
+            private ChessBoard chessBoard;
+
+            public override int GetHashCode()
+            {
+                return chessBoard.GetHashCode();
+            }
+        }
         public class SearchState
         {
             public SearchState() { }
