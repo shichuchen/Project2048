@@ -11,12 +11,19 @@ namespace Project2048
     using Direction = Settings.Direction;
     using Board = UInt64;
     public class FailSoftAlphaBetaAI : IPlayer
-    {
+    {   
+        public class Decision
+        {
+            public Direction bestDirection = Direction.None;
+            public Position bestPosition;
+        }
         public class HashItem
         {
             public int depth = 0;
             public int hashFlag = -1;
             public double value = 0;
+            public Decision decision = new Decision();
+
         }
         public FailSoftAlphaBetaAI(ChessBoard chessBoard)
         {
@@ -34,16 +41,12 @@ namespace Project2048
         private const int hashAlpha = 1;
         private const int hashBeta = 2;
         private static Dictionary<Board, HashItem> hashTable;
-        //private static HashItem[] hashList;
-        //private const int tableSize = 1 << 25;
-        //private const int tableMask = tableSize - 1;
         private Direction bestDirection = Direction.None;
         private int depth = 1;
         private static int cutOff = 0;
         public Direction GetMoveDirection()
         {
             cutOff = 0;
-            //hashList = new HashItem[tableSize];
             hashTable = new Dictionary<Board, HashItem>();
             TimeRecorder timeRecorder = new TimeRecorder();
             while (timeRecorder.GetTotalMilliSeconds() <= maxMilliSecs)
@@ -60,13 +63,13 @@ namespace Project2048
             }
             return bestDirection;
         }
-        private double ProbeHash(int depth, double alpha, double beta)
+        private double ProbeHash(int depth, double alpha, double beta, out Decision prevDecision)
         {
-
             if (hashTable.TryGetValue(chessBoard.BitBoard, out var hashItem))
             {
                 if (hashItem.depth >= depth)
                 {
+                    prevDecision = hashItem.decision;
                     if (hashItem.hashFlag == hashExact)
                     {
                         return hashItem.value;
@@ -81,9 +84,10 @@ namespace Project2048
                     }
                 }
             }
+            prevDecision = new Decision();
             return infinity;
         }
-        private void RecordHash(int depth, double value, int hashFlag)
+        private void RecordHash(int depth, double value, int hashFlag, Decision decision)
         {
             if (hashTable.TryGetValue(chessBoard.BitBoard, out HashItem hashItem))
             {
@@ -97,14 +101,15 @@ namespace Project2048
             {
                 value = value,
                 hashFlag = hashFlag,
-                depth = depth
+                depth = depth,
+                decision = decision,
             };
         }
         public double MoveSearch(int depth, double alpha, double beta)
         {
             int hashFlag = hashAlpha;
             double val;
-            if ((val = ProbeHash(depth, alpha, beta)) != infinity)
+            if ((val = ProbeHash(depth, alpha, beta, out Decision prevDecision)) != infinity)
             {
                 ++cutOff;
                 return val;
@@ -116,9 +121,28 @@ namespace Project2048
             if (depth == 0)
             {
                 val = Evaluator.EvalForMove(chessBoard);
-                RecordHash(depth, val, hashExact);
+                RecordHash(depth, val, hashExact, prevDecision);
                 return val;
             }
+            //Direction[] moveDirections;
+            //if (prevDecision.bestDirection != Direction.None)
+            //{
+            //    moveDirections = new Direction[4];
+            //    moveDirections[0] = prevDecision.bestDirection;
+            //    int directionIndex = 1;
+            //    foreach (Direction direction in directions)
+            //    {   
+            //        if(direction != moveDirections[0])
+            //        {
+            //            moveDirections[directionIndex] = direction;
+            //        }
+            //        ++directionIndex;
+            //    }
+            //}
+            //else
+            //{
+            //    moveDirections = directions;
+            //}
             foreach (Direction direction in directions)
             {
                 var newBoard = chessBoard.Copy();
@@ -128,7 +152,7 @@ namespace Project2048
                     val = -ai.AddSearch(depth - 1, -beta, -alpha);
                     if (val >= beta)
                     {
-                        RecordHash(depth, beta, hashBeta);
+                        RecordHash(depth, beta, hashBeta, prevDecision);
                         return beta;
                     }
                     if (val > alpha)
@@ -136,17 +160,18 @@ namespace Project2048
                         hashFlag = hashExact;
                         alpha = val;
                         bestDirection = direction;
+                        prevDecision.bestDirection = direction;
                     }
                 }
             }
-            RecordHash(depth, alpha, hashFlag);
+            RecordHash(depth, alpha, hashFlag, prevDecision);
             return alpha;
         }
         public double AddSearch(int depth, double alpha, double beta)
         {
             int hashFlag = hashAlpha;
             double val;
-            if ((val = ProbeHash(depth, alpha, beta)) != infinity)
+            if ((val = ProbeHash(depth, alpha, beta, out Decision prevDecision)) != infinity)
             {
                 ++cutOff;
                 return val;
@@ -154,11 +179,11 @@ namespace Project2048
             if (depth == 0)
             {
                 val = -Evaluator.EvalForMove(chessBoard);
-                RecordHash(depth, val, hashExact);
+                RecordHash(depth, val, hashExact, prevDecision);
                 return val;
             }
+
             var emptyPositions = chessBoard.GetEmptyPositions();
-            //Candidates candidates = new Candidates(chessBoard);
             foreach (int level in addLevels)
             {
                 foreach (Position position in emptyPositions)
@@ -168,7 +193,7 @@ namespace Project2048
                     chessBoard.SetEmpty(position);
                     if (val >= beta)
                     {
-                        RecordHash(depth, beta, hashBeta);
+                        RecordHash(depth, beta, hashBeta, prevDecision);
                         return beta;
                     }
                     if (val > alpha)
@@ -178,7 +203,7 @@ namespace Project2048
                     }
                 }
             }
-            RecordHash(depth, alpha, hashFlag);
+            RecordHash(depth, alpha, hashFlag, prevDecision);
             return alpha;
         }
     }

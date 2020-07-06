@@ -76,7 +76,7 @@ namespace Project2048MSTest
             var chessBoard = GetTestBoard1();
             chessBoard.Print();
             var AI = new AlphaBetaAI(chessBoard);
-            var direction = AI.GetTestMoveDirection();
+            var direction = AI.GetMoveDirection();
             Assert.AreNotEqual(direction, Settings.Direction.Down);
         }
         //[TestMethod]

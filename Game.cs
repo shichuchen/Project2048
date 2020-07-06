@@ -21,10 +21,7 @@ namespace Project2048
                 gameManager.OnEachRoundStart(chessBoard);
                 chessBoard.RandomAdd();
                 chessBoard.RandomAdd();
-                if (printProcess)
-                {
-                    chessBoard.Print();
-                }
+                PrintProcess(chessBoard);
                 while (true)
                 {
                     if (chessBoard.IsGameOver())
@@ -33,26 +30,28 @@ namespace Project2048
                         gameManager.OnEachRoundEnd(chessBoard);
                         break;
                     }
-                    var ai = new FailSoftAlphaBetaAI(chessBoard);
+                    var ai = new AlphaBetaAI(chessBoard);
                     gameManager.OnEachMoveStart(chessBoard);
                     Direction direction = ai.GetMoveDirection();
                     gameManager.OnEachMoveEnd(chessBoard);
                     if (chessBoard.Move(direction))
                     {
-                        if (printProcess)
-                        {
-                            chessBoard.Print();
-                        }
-
+                        PrintProcess(chessBoard);
                         chessBoard.RandomAdd();
-                        if (printProcess)
-                        {
-                            chessBoard.Print();
-                        }
+                        PrintProcess(chessBoard);
+
                     }
                 }
             }
             gameManager.OnComplete();
+        }
+
+        private static void PrintProcess(ChessBoard chessBoard)
+        {
+            if (printProcess)
+            {
+                chessBoard.Print();
+            }
         }
     }
 

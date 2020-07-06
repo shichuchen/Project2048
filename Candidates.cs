@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Project2048
 {
@@ -9,25 +10,29 @@ namespace Project2048
     /// </summary>
     public class Candidates : Dictionary<int, List<Position>>
     {
-        public Candidates(ChessBoard chessBoard)
-        {
-            this[addLevels[0]] = new List<Position>();
-            this[addLevels[1]] = new List<Position>();
-            //AllIn(chessBoard);
-            ChooseAnnoyingChess(chessBoard);
-        }
-        private void AllIn(ChessBoard chessBoard)
+        public static Candidates AllIn(ChessBoard chessBoard)
         {
             var emptyPositions = chessBoard.GetEmptyPositions();
-            this[addLevels[0]] = new List<Position>(emptyPositions);
-            this[addLevels[1]] = new List<Position>(emptyPositions);
+            var candidates = new Candidates
+            {
+                [addLevels[0]] = new List<Position>(emptyPositions),
+                [addLevels[1]] = new List<Position>(emptyPositions)
+            };
+            return candidates;
         }
-
+        public static Candidates ChooseAnnoying(ChessBoard chessBoard)
+        {
+            var candidates = new Candidates();
+            candidates.ChooseAnnoyingChess(chessBoard);
+            return candidates;
+        }
         private double minEval = double.MaxValue;
-        private static readonly int[] addLevels = ChessBoard.AddLevels;
+        protected static readonly int[] addLevels = ChessBoard.AddLevels;
         public int[] Levels { get { return addLevels; } }
         private void ChooseAnnoyingChess(ChessBoard chessBoard)
         {
+            this[addLevels[0]] = new List<Position>();
+            this[addLevels[1]] = new List<Position>();
             var emptyPositions = chessBoard.GetEmptyPositions();
             foreach (int level in addLevels)
             {
@@ -35,8 +40,6 @@ namespace Project2048
                 {
                     chessBoard.AddNew(position, level);
                     double eval = Evaluator.EvalForAdd(chessBoard);
-                    //chessBoard.Print();
-                    //Console.WriteLine("\t{0}", eval);
                     if (eval < minEval)
                     {
                         minEval = eval;

@@ -26,9 +26,7 @@ namespace Project2048
         public const double LevelTwoPossibility = 0.1;
         public const int LineMaxValue = 65536;
 
-        private const int maxRow = 4;
-        private const int maxCol = 4;
-        private const int boardSize = maxRow * maxCol;
+        private const int boardSize = 16;
         private static readonly Direction[] directions = Settings.Directions;
         private static readonly Position[] InBoardPositions =
         {
@@ -125,12 +123,15 @@ namespace Project2048
         private static void CacheLineMoveResult(int line)
         {
             Line result = MoveLineLeft(line);
+
             Line reverseResult = result.ToReverse();
             Line reverseLine = ((Line)line).ToReverse();
+
             Board transposeLine = ((Line)line).ToTranspose();
             Board transposeResult = result.ToTranspose();
             Board transposeReverseLine = reverseLine.ToTranspose();
             Board transposeReverseResult = reverseResult.ToTranspose();
+
             moveLeftLines[line] = (Line)(line ^ result);
             moveRightLines[reverseLine] = (Line)(reverseLine ^ reverseResult);
             moveUpLines[line] = transposeLine ^ transposeResult;
@@ -296,10 +297,10 @@ namespace Project2048
         {
             var temp = BitBoard;
             int maxLevel = 0;
-            while(temp > 0)
+            while (temp > 0)
             {
                 int level = (int)(temp & LevelMask);
-                if(level > maxLevel)
+                if (level > maxLevel)
                 {
                     maxLevel = level;
                 }

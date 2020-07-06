@@ -45,17 +45,17 @@ namespace Project2048
         public void PrintEndTime()
         {
             Console.WriteLine("\t移动次数为:\t{0}", moveCount);
-            Console.WriteLine("\t每次移动平均用时:\t{0}ms", totalMoveMilliSeconds / moveCount);
+            Console.WriteLine("\t平均用时:\t{0}ms", totalMoveMilliSeconds / moveCount);
 
             var roundAverageDepth = roundTotalDepth / moveCount;
-            Console.WriteLine("\t每次移动平均搜索深度为:\t{0}", roundAverageDepth);
+            Console.WriteLine("\t平均搜索深度为:\t{0}", roundAverageDepth);
             gameTotalDepth += roundAverageDepth;
 
             var roundAverageCutOff = roundTotalCutOff / moveCount;
-            Console.WriteLine("\t每次移动平均置换表裁剪为:\t{0}", roundAverageCutOff);
+            Console.WriteLine("\t平均置换表裁剪为:\t{0}", roundAverageCutOff);
             gameTotalCutOff += roundAverageCutOff;
 
-            Console.WriteLine("\t本局总共用时:\t{0}s", roundTimeRecorder.GetTotalSeconds());
+            Console.WriteLine("\t总共用时:\t{0}s", roundTimeRecorder.GetTotalSeconds());
         }
         public void OnEachRoundEnd(ChessBoard chessBoard)
         {
@@ -84,8 +84,8 @@ namespace Project2048
         }
         public void OnComplete()
         {
-            Console.WriteLine("\t全局每次移动平均搜索深度为:\t{0}", gameTotalDepth / maxRound);
-            Console.WriteLine("\t全局每次移动置换表裁剪为:\t{0}", gameTotalCutOff / maxRound);
+            Console.WriteLine("\t全局平均搜索深度为:\t{0}", gameTotalDepth / maxRound);
+            Console.WriteLine("\t全局平均置换表裁剪为:\t{0}", gameTotalCutOff / maxRound);
             List<int> reachedValues = valueCountMap.Keys.ToList();
             reachedValues.Sort((x, y) => y.CompareTo(x));
             for (int i = 0; i < reachedValues.Count; ++i)

@@ -5,33 +5,51 @@ using System.Linq;
 namespace Project2048
 {
     using Direction = Settings.Direction;
+    using Board = UInt64;
     public class AlphaBetaAI : IPlayer
     {
+        public AlphaBetaAI(ChessBoard chessBoard)
+        {
+            this.chessBoard = chessBoard;
+        }
+        private readonly ChessBoard chessBoard;
+        private static readonly bool printProcess = Settings.PrintProcess;
         private const double infinity = Evaluator.Infinity;
         private const double lostPenality = -infinity / 3;
         private const double bound = infinity / 2;
+        private const int hashExact = 0;
+        private const int hashAlpha = 1;
+        private const int hashBeta = 2;
+        private static int cutOff = 0;
+        private static readonly Direction[] directions = Settings.Directions;
+        private static readonly int[] addLevels = ChessBoard.AddLevels;
+        private static Dictionary<Board, HashItem> hashTable;
+        public class HashItem
+        {
+            public int depth = 0;
+            public int hashFlag = -1;
+            public double value = 0;
+        }
         public class SearchState
         {
             public SearchState() { }
             private static readonly int searchMilliSecs = Settings.MaxSearchMilliSecs;
-            private static readonly Direction[] directions = Settings.Directions;
+
             private const int minDepth = 6;
             private const Direction initBestDirection = Direction.None;
             private const Position initBestPosition = null;
-
             private static int TargetDepth = minDepth;
-            public static int CutOff = 0;
 
             private CacheStatus<Direction, SearchState> directionStatus;
             private CacheStatus<Position, SearchState> positionStatus;
             private TimeRecorder timeRecorder;
             private bool VisitedThisState = false;
-            private HashSet<ChessBoard> bitBoards = new HashSet<ChessBoard>();
 
             public int Depth { get; set; } = 1;
             public int Turn { get; set; } = 0;
             public double Alpha { get; set; } = -bound;
             public double Beta { get; set; } = bound;
+            public bool OnMove { get { return (Turn & 1) == 0; } }
             public Direction BestDirection
             {
                 get { return directionStatus.BestDecision; }
@@ -44,9 +62,8 @@ namespace Project2048
             }
             public void Initialize(ChessBoard chessBoard)
             {
-                CutOff = 0;
                 StartTimeRecord();
-                InitDepth(chessBoard);
+                //InitDepth(chessBoard);
             }
             private void InitDepth(ChessBoard chessBoard)
             {
@@ -69,13 +86,13 @@ namespace Project2048
                 }
                 return timeRecorder.GetTotalMilliSeconds();
             }
-            public void SetNextRound()
+            public void ToNextRound()
             {
                 ++Depth;
                 Alpha = -bound;
                 Beta = bound;
             }
-            public void BuildMoveStatus(ChessBoard chessBoard)
+            public void TryBuildMoveStatus(ChessBoard chessBoard)
             {
                 if (!VisitedThisState)
                 {
@@ -84,26 +101,28 @@ namespace Project2048
                     foreach (Direction direction in directions)
                     {
                         ChessBoard newBoard = chessBoard.Copy();
-                        if (newBoard.Move(direction))
-                        {
-                            if (TryAddBitBoard(newBoard))
-                            {
-                                directionStatus.AddBoard(direction, newBoard);
-                            }
-                            else
-                            {
-                                CutOff++;
-                            }
-                        }
+                        TryAddDirectionStatus(direction, newBoard);
                     }
                 }
             }
-            public void BuildAddStatus(ChessBoard chessBoard)
+
+            private void TryAddDirectionStatus(Direction direction, ChessBoard newBoard)
+            {
+                if (newBoard.Move(direction))
+                {
+                    if (CanAddBitBoard(newBoard))
+                    {
+                        directionStatus.AddBoard(direction, newBoard);
+                    }
+                }
+            }
+
+            public void TryBuildAddStatus(ChessBoard chessBoard)
             {
                 if (!VisitedThisState)
                 {
                     VisitedThisState = true;
-                    Candidates candidates = new Candidates(chessBoard);
+                    Candidates candidates = Candidates.AllIn(chessBoard);
                     positionStatus = new CacheStatus<Position, SearchState>(initBestPosition);
                     foreach (int level in candidates.Levels)
                     {
@@ -111,34 +130,36 @@ namespace Project2048
                         {
                             ChessBoard newBoard = chessBoard.Copy();
                             newBoard.AddNew(position, level);
-
-                            if (TryAddBitBoard(newBoard))
-                            {
-                                positionStatus.AddBoard(position, newBoard);
-                            }
-                            else
-                            {
-                                CutOff++;
-                            }
+                            TryAddPositionStatus(position, newBoard);
                         }
                     }
                 }
             }
-            private bool TryAddBitBoard(ChessBoard chessBoard)
+
+            private void TryAddPositionStatus(Position position, ChessBoard newBoard)
             {
-                var bitBoard = chessBoard;
-                var transposeRight = chessBoard.ToTransposeRight();
-                var transposeLeft = chessBoard.ToTransposeLeft();
-                if (
-                    !bitBoards.Contains(bitBoard)
-                    && !bitBoards.Contains(transposeRight)
-                    && !bitBoards.Contains(transposeLeft)
-                    )
+                if (CanAddBitBoard(newBoard))
                 {
-                    bitBoards.Add(bitBoard);
-                    return true;
+                    positionStatus.AddBoard(position, newBoard);
                 }
-                return false;
+            }
+
+            private bool CanAddBitBoard(ChessBoard chessBoard)
+            {
+                return true;
+                //var bitBoard = chessBoard;
+                //var transposeRight = chessBoard.ToTransposeRight();
+                //var transposeLeft = chessBoard.ToTransposeLeft();
+                //if (
+                //    !bitBoards.Contains(bitBoard)
+                //    && !bitBoards.Contains(transposeRight)
+                //    && !bitBoards.Contains(transposeLeft)
+                //    )
+                //{
+                //    bitBoards.Add(bitBoard);
+                //    return true;
+                //}
+                //return false;
             }
             public ChessBoard[] GetBoards()
             {
@@ -182,111 +203,168 @@ namespace Project2048
                 newState.Depth = Depth - 1;
             }
         }
-        public AlphaBetaAI(ChessBoard chessBoard)
+
+        private double ProbeHash(int depth, double alpha, double beta)
         {
-            this.chessBoard = chessBoard;
+            if (hashTable.TryGetValue(chessBoard.BitBoard, out var hashItem))
+            {
+                if (hashItem.depth >= depth)
+                {
+
+                    if (hashItem.hashFlag == hashExact)
+                    {
+                        return hashItem.value;
+                    }
+                    if ((hashItem.hashFlag == hashAlpha) && (hashItem.value <= alpha))
+                    {
+                        return alpha;
+                    }
+                    if ((hashItem.hashFlag == hashBeta) && (hashItem.value >= beta))
+                    {
+                        return beta;
+                    }
+                }
+            }
+            return infinity;
         }
-        private readonly ChessBoard chessBoard;
-        private Direction bestDirection = Direction.None;
-        private static readonly bool printProcess = Settings.PrintProcess;
+        private void RecordHash(int depth, double value, int hashFlag)
+        {
+            if (hashTable.TryGetValue(chessBoard.BitBoard, out HashItem hashItem))
+            {
+                if (hashItem.depth > depth)
+                {
+                    return;
+                }
+
+            }
+            hashTable[chessBoard.BitBoard] = new HashItem()
+            {
+                value = value,
+                hashFlag = hashFlag,
+                depth = depth,
+
+            };
+        }
         public Direction GetMoveDirection()
         {
+            hashTable = new Dictionary<Board, HashItem>();
+            cutOff = 0;
             SearchState searchState = new SearchState();
             searchState.Initialize(chessBoard);
             while (!searchState.TimeOut())
             {
                 AlphaBeta(searchState);
-                searchState.SetNextRound();
+                searchState.ToNextRound();
             }
-            Analyser.StoreDepth(searchState.Depth);
-            if (printProcess)
-            {
-                Console.WriteLine("\tDirection:\t{0}", bestDirection);
-                Console.WriteLine("\tDepth:\t{0}", searchState.Depth);
-                Console.WriteLine("\tCutOff:\t{0}", SearchState.CutOff);
-                Console.WriteLine("\tSearchTime:\t{0}\n", searchState.GetSearchTime());
-            }
-            return bestDirection;
+            AnalyserRecordResult(searchState);
+            PrintProcess(searchState);
+            return searchState.BestDirection;
         }
-        public Direction GetTestMoveDirection()
+
+        private static void AnalyserRecordResult(SearchState searchState)
         {
-            SearchState searchState = new SearchState();
-            searchState.Initialize(chessBoard);
-            while (!searchState.TimeOut())
-            {
-                AlphaBeta(searchState);
-                Console.WriteLine("\tDirection:\t{0}", bestDirection);
-                Console.WriteLine("\tDepth:\t{0}", searchState.Depth);
-                searchState.SetNextRound();
-            }
             Analyser.StoreDepth(searchState.Depth);
+            Analyser.StoreCutOff(cutOff);
+        }
+
+        private void PrintProcess(SearchState searchState)
+        {
             if (printProcess)
             {
-                Console.WriteLine("\tDirection:\t{0}", bestDirection);
+                Console.WriteLine("\tDirection:\t{0}", searchState.BestDirection);
                 Console.WriteLine("\tDepth:\t{0}", searchState.Depth);
-                Console.WriteLine("\tCutOff:\t{0}", SearchState.CutOff);
+                Console.WriteLine("\tCutOff:\t{0}", cutOff);
                 Console.WriteLine("\tSearchTime:\t{0}\n", searchState.GetSearchTime());
             }
-            return bestDirection;
         }
         public double AlphaBeta(SearchState searchState)
         {
+            int hashFlag = hashAlpha;
+            double val;
+            if ((val = ProbeHash(searchState.Depth, searchState.Alpha, searchState.Beta)) != infinity)
+            {
+                ++cutOff;
+                return val;
+            }
             if (chessBoard.IsGameOver())
             {
                 return lostPenality - searchState.Depth;
             }
-            if (searchState.Turn % 2 == 0)
+            if(searchState.Depth == 0)
             {
-                if (searchState.Depth == 0)
+                val = Evaluator.EvalForMove(chessBoard);
+                if (!searchState.OnMove)
                 {
-                    return Evaluator.EvalForMove(chessBoard);
+                    val = -val;
                 }
-                searchState.BuildMoveStatus(chessBoard);
-                var boards = searchState.GetBoards();
-                foreach (var board in boards)
-                {
-                    var newAI = new AlphaBetaAI(board);
-                    var newState = searchState.GetState(board);
-                    var val = -newAI.AlphaBeta(newState);
-                    if (val >= searchState.Beta)
-                    {
-                        return searchState.Beta;
-                    }
-                    if (val > searchState.Alpha)
-                    {
-                        searchState.Alpha = val;
-                        var direction = searchState.GetDirection(board);
-                        bestDirection = direction;
-                        searchState.BestDirection = direction;
-                    }
-                }
+                RecordHash(searchState.Depth, val, hashExact);
+                return val;
+            }
+            if (searchState.OnMove)
+            {
+                MoveSearch(searchState, ref hashFlag);
             }
             else
             {
-                if (searchState.Depth == 0)
-                {
-                    return -Evaluator.EvalForMove(chessBoard);
-                }
-                searchState.BuildAddStatus(chessBoard);
-                var boards = searchState.GetBoards();
-                foreach (var board in boards)
-                {
-                    var newAI = new AlphaBetaAI(board);
-                    var newState = searchState.GetState(board);
-                    var val = -newAI.AlphaBeta(newState);
-                    if (val >= searchState.Beta)
-                    {
-                        return searchState.Beta;
-                    }
-                    if (val > searchState.Alpha)
-                    {
-                        searchState.Alpha = val;
-                        searchState.BestPosition = searchState.GetPosition(board);
-                    }
-                }
+                AddSearch(searchState, ref hashFlag);
             }
+            RecordHash(searchState.Depth, searchState.Alpha, hashFlag);
             return searchState.Alpha;
         }
 
+        private void MoveSearch(SearchState searchState, ref int hashFlag)
+        {
+            double val;
+            if(hashTable.TryGetValue(chessBoard.BitBoard, out var hashItem))
+            {
+
+            }
+            #region old version
+            //searchState.TryBuildMoveStatus(chessBoard);
+            //ChessBoard[] boards = searchState.GetBoards();
+            //foreach (var board in boards)
+            //{
+            //    AlphaBetaAI newAI = new AlphaBetaAI(board);
+            //    SearchState newState = searchState.GetState(board);
+            //    val = -newAI.AlphaBeta(newState);
+            //    if (val > searchState.Alpha)
+            //    {
+            //        hashFlag = hashExact;
+            //        searchState.Alpha = val;
+            //        searchState.BestDirection = searchState.GetDirection(board);
+            //    }
+            //    if (val >= searchState.Beta)
+            //    {
+            //        RecordHash(searchState.Depth, searchState.Beta, hashBeta);
+            //        return;
+            //    }
+            //}
+            #endregion
+        }
+
+        private void AddSearch(SearchState searchState, ref int hashFlag)
+        {
+            #region old version
+            //searchState.TryBuildAddStatus(chessBoard);
+            //ChessBoard[] boards = searchState.GetBoards();
+            //foreach (var board in boards)
+            //{
+            //    AlphaBetaAI newAI = new AlphaBetaAI(board);
+            //    SearchState newState = searchState.GetState(board);
+            //    double val = -newAI.AlphaBeta(newState);
+            //    if (val > searchState.Alpha)
+            //    {
+            //        hashFlag = hashExact;
+            //        searchState.Alpha = val;
+            //        searchState.BestPosition = searchState.GetPosition(board);
+            //    }
+            //    if (val >= searchState.Beta)
+            //    {
+            //        RecordHash(searchState.Depth, searchState.Beta, hashBeta);
+            //        return;
+            //    }
+            #endregion
+        }
+    }
     }
 }
