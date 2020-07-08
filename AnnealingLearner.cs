@@ -1,7 +1,10 @@
 ﻿using System;
 
 namespace Project2048
-{
+{   
+    /// <summary>
+    /// 利用退火算法改变棋盘参数, 机器学习
+    /// </summary>
     class AnnealingLearner : ILearner
     {
         public AnnealingLearner()
@@ -59,7 +62,10 @@ namespace Project2048
             ++currBoardIterCount;
             currentScore += GetScore(chessBoard);
         }
-
+        public int GetScore(ChessBoard chessBoard)
+        {
+            return chessBoard.Score;
+        }
         private void UpdateBestWeights()
         {
             int score = currentScore;
@@ -130,9 +136,6 @@ namespace Project2048
             Evaluator.weights.SetDeltaChangeToWeight(heurIndex, interp * (maxWeight - minWeight));
         }
 
-        public int GetScore(ChessBoard chessBoard)
-        {
-            return chessBoard.Score;
-        }
+
     }
 }

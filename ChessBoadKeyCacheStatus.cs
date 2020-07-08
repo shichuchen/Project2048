@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Project2048
 {
-    class ChessBoadKeyCacheStatus<TDecision, TStatus>
+    class ChessBoadKeyCacheStatus<TDecision, TStatus> : ICacheDecision<TDecision>
         where TStatus : class, new()
     {
         public ChessBoadKeyCacheStatus(TDecision initBestDecision)

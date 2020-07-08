@@ -262,42 +262,42 @@ namespace Project2048
         }
         public List<Position> GetEmptyPositions()
         {
-            var EmptyPositions = new List<Position>();
-            var temp = BitBoard;
+            List<Position> EmptyPositions = new List<Position>();
+            Board board = BitBoard;
             foreach (Position position in InBoardPositions)
             {
-                if ((temp & LevelMask) == 0)
+                if ((board & LevelMask) == 0)
                 {
                     EmptyPositions.Add(position);
                 }
-                temp >>= 4;
+                board >>= 4;
             }
             return EmptyPositions;
         }
         private int GetMaxValue()
         {
-            var temp = BitBoard;
+            Board board = BitBoard;
             int maxLevel = 0;
-            while (temp > 0)
+            while (board > 0)
             {
-                int level = (int)(temp & LevelMask);
+                int level = (int)(board & LevelMask);
                 if (level > maxLevel)
                 {
                     maxLevel = level;
                 }
-                temp >>= 4;
+                board >>= 4;
             }
             return ToValue(maxLevel);
         }
         private int GetDistinctValuesCount()
         {
             HashSet<int> distinctLevels = new HashSet<int>();
-            var temp = BitBoard;
-            while (temp > 0)
+            Board board = BitBoard;
+            while (board > 0)
             {
-                int level = (int)(temp & LevelMask);
+                int level = (int)(board & LevelMask);
                 distinctLevels.Add(level);
-                temp >>= 4;
+                board >>= 4;
             }
             return distinctLevels.Count;
         }
@@ -307,7 +307,7 @@ namespace Project2048
         }
         public bool Move(Direction direction)
         {
-            var result = GetMoveResult(direction);
+            Board result = GetMoveResult(direction);
             if (result != BitBoard)
             {
                 BitBoard = result;

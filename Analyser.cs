@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Project2048
-{
+{   
+    /// <summary>
+    /// 分析棋盘数据
+    /// </summary>
     class Analyser : IMoveTracker, IRoundTracker, ICompleteTracker
     {
         private const int maxRound = Settings.MaxRound;

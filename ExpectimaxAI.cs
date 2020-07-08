@@ -1,6 +1,9 @@
 ﻿namespace Project2048
 {
     using Direction = Settings.Direction;
+    /// <summary>
+    /// 不采用任何搜索算法, 只是简单的验证所有方向哪个方向对自己最优
+    /// </summary>
     class ExpectimaxAI : IPlayer
     {
         private static readonly Direction[] directions = Settings.Directions;

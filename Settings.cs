@@ -17,8 +17,8 @@
 
         public const int MaxSearchMilliSecs = 100;
 
-        public const int MaxRound = 1;
-        public const bool PrintProcess = true;
+        public const int MaxRound = 50;
+        public const bool PrintProcess = false;
         public const bool OnAnalyse = true;
         public const bool OnEvolve = false;
     }

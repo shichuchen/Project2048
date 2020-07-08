@@ -52,7 +52,7 @@
     <Compile Include="GameManager.cs" />
     <Compile Include="HashCacheAlphaBetaAI.cs" />
     <Compile Include="Human.cs" />
-    <Compile Include="ICacheStatus.cs" />
+    <Compile Include="ICacheDecision.cs" />
     <Compile Include="ICompleteTracker.cs" />
     <Compile Include="ILearner.cs" />
     <Compile Include="IMoveTracker.cs" />

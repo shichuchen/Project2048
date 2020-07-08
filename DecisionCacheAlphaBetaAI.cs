@@ -14,6 +14,7 @@ namespace Project2048
         {
             this.chessBoard = chessBoard;
         }
+
         private readonly ChessBoard chessBoard;
         private static readonly bool printProcess = Settings.PrintProcess;
         private static readonly Direction[] directions = Settings.Directions;
@@ -33,7 +34,7 @@ namespace Project2048
             private const Direction initBestDirection = Direction.None;
             private const Position initBestPosition = null;
             private static int TargetDepth = minDepth;
-            private static Position[] blankPositions = new Position[] { };
+            private static readonly Position[] blankPositions = new Position[] { };
 
             private DecisionKeyCacheStatus<Direction, SearchState> directionStatus;
 
@@ -257,6 +258,7 @@ namespace Project2048
         }
         public double AlphaBeta(SearchState searchState)
         {
+
             if (chessBoard.IsGameOver())
             {
                 return lostPenality - searchState.Depth;
@@ -265,17 +267,11 @@ namespace Project2048
             {
                 return Eval(searchState);
             }
-            if (searchState.OnMove)
-            {
-                MoveSearch(searchState);
-            }
-            else
-            {
-                AddSearch(searchState);
-            }
+
+            Search(searchState);
+
             return searchState.Alpha;
         }
-
         private double Eval(SearchState searchState)
         {
             if (searchState.OnMove)
@@ -285,6 +281,18 @@ namespace Project2048
             else
             {
                 return -Evaluator.EvalForMove(chessBoard);
+            }
+        }
+
+        private void Search(SearchState searchState)
+        {
+            if (searchState.OnMove)
+            {
+                MoveSearch(searchState);
+            }
+            else
+            {
+                AddSearch(searchState);
             }
         }
 

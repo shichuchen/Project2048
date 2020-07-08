@@ -43,14 +43,14 @@ namespace Project2048MSTest
             return chessBoard;
         }
 
-        [TestMethod]
-        public void Test1()
-        {
-            var chessBoard = GetTestBoard1();
-            chessBoard.Print();
-            var ai = new DecisionCacheAlphaBetaAI(chessBoard);
-            var direction = ai.GetMoveDirection();
-            Assert.AreNotEqual(direction, Direction.Left);
-        }
+        //[TestMethod]
+        //public void Test1()
+        //{
+        //    var chessBoard = GetTestBoard1();
+        //    chessBoard.Print();
+        //    var ai = new DecisionCacheAlphaBetaAI(chessBoard);
+        //    var direction = ai.GetMoveDirection();
+        //    Assert.AreNotEqual(direction, Direction.Left);
+        //}
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Project2048
 {
-    class DecisionKeyCacheStatus<TDecision, TStatus>
+    class DecisionKeyCacheStatus<TDecision, TStatus>: ICacheDecision<TDecision>
         where TStatus: class, new()
     {   
         public DecisionKeyCacheStatus(TDecision initBestDecision)

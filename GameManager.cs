@@ -8,6 +8,7 @@ namespace Project2048
         private readonly Analyser analyser;
         private readonly bool onEvolve = Settings.OnEvolve;
         private readonly AnnealingLearner learner;
+        private int round = 0;
         public GameManager()
         {
             if (onAnalyse)
@@ -74,6 +75,8 @@ namespace Project2048
 
         public void OnEachRoundStart(ChessBoard chessBoard)
         {
+            Console.WriteLine("第{0}次:", round);
+            ++round;
             if (onAnalyse)
             {
                 analyser.OnEachRoundStart(chessBoard);

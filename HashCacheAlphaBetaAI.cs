@@ -69,7 +69,7 @@ namespace Project2048
             public void Initialize(ChessBoard chessBoard)
             {
                 StartTimeRecord();
-                //InitDepth(chessBoard);
+                InitDepth(chessBoard);
             }
             private void InitDepth(ChessBoard chessBoard)
             {
@@ -83,7 +83,7 @@ namespace Project2048
             {
                 return
                     timeRecorder.GetTotalMilliSeconds() >= searchMilliSecs
-                    //&& Depth >= TargetDepth
+                    && Depth >= TargetDepth
                     ;
             }
             public double GetSearchTime()
