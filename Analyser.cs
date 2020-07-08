@@ -14,6 +14,7 @@ namespace Project2048
         private double totalMoveMilliSeconds = 0;
         private static double roundTotalDepth = 0;
         private static double gameTotalDepth = 0;
+        private static int round = 0;
 
         private static double roundTotalCutOff = 0;
         private static double gameTotalCutOff = 0;
@@ -42,7 +43,14 @@ namespace Project2048
             ++moveCount;
             totalMoveMilliSeconds += moveTimeRecorder.GetTotalMilliSeconds();
         }
-        public void PrintEndTime()
+        public void OnEachRoundEnd(ChessBoard chessBoard)
+        {
+            ++round;
+            RecordResult(chessBoard);
+            PrintSearcherDatas();
+            PrintValuesPossibilities();
+        }
+        public void PrintSearcherDatas()
         {
             Console.WriteLine("\t移动次数为:\t{0}", moveCount);
             Console.WriteLine("\t平均用时:\t{0}ms", totalMoveMilliSeconds / moveCount);
@@ -57,15 +65,23 @@ namespace Project2048
 
             Console.WriteLine("\t总共用时:\t{0}s", roundTimeRecorder.GetTotalSeconds());
         }
-        public void OnEachRoundEnd(ChessBoard chessBoard)
+        private void PrintValuesPossibilities()
         {
-            RecordResult(chessBoard);
-            PrintEndTime();
+            List<int> reachedValues = valueCountMap.Keys.ToList();
+            reachedValues.Sort((x, y) => y.CompareTo(x));
+            for (int i = 0; i < reachedValues.Count; ++i)
+            {
+                int value = reachedValues[i];
+                double possibility = (valueCountMap[reachedValues[i]] / (double)round) * 100;
+                Console.WriteLine(
+                    "\t{0}\t出现的概率为:\t{1:f}%\n", value, possibility
+                    );
+            }
         }
         private void RecordResult(ChessBoard chessBoard)
         {
             int maxValue = chessBoard.MaxValue;
-            for (int level = 16; level > 7; --level)
+            for (int level = 16; level > 9; --level)
             {
                 int value = 1 << level;
                 if (value <= maxValue)
@@ -78,7 +94,7 @@ namespace Project2048
                     {
                         valueCountMap[value] = 1;
                     }
-                    valueCountMap[value] = Math.Min(valueCountMap[value], maxRound);
+                    valueCountMap[value] = Math.Min(valueCountMap[value], round);
                 }
             }
         }
@@ -86,16 +102,9 @@ namespace Project2048
         {
             Console.WriteLine("\t全局平均搜索深度为:\t{0}", gameTotalDepth / maxRound);
             Console.WriteLine("\t全局平均置换表裁剪为:\t{0}", gameTotalCutOff / maxRound);
-            List<int> reachedValues = valueCountMap.Keys.ToList();
-            reachedValues.Sort((x, y) => y.CompareTo(x));
-            for (int i = 0; i < reachedValues.Count; ++i)
-            {
-                int value = reachedValues[i];
-                double possibility = (valueCountMap[reachedValues[i]] / (double)Settings.MaxRound) * 100;
-                Console.WriteLine(
-                    "\t{0}\t出现的概率为:\t{1:f}%\n", value, possibility
-                    );
-            }
+
         }
+
+
     }
 }

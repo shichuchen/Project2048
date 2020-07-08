@@ -3,6 +3,7 @@
 namespace Project2048
 {
     using Line = UInt16;
+    using Board = UInt64;
     /// <summary>
     /// 处理棋盘评估的分数
     /// </summary>
@@ -15,6 +16,7 @@ namespace Project2048
         public static readonly Weights weights = new Weights();
         public const double Infinity = double.MaxValue;
         private const int LineMaxValue = ChessBoard.LineMaxValue;
+        private const Board RowMask = BitBoardHandler.RowMask;
         private static readonly double[] moveScores = new double[LineMaxValue];
         private static readonly double[] addScores = new double[LineMaxValue];
         /// <summary>
@@ -121,12 +123,23 @@ namespace Project2048
         }
         public static double EvalForMove(ChessBoard chessBoard)
         {
-            return chessBoard.GetScoresOfTables(moveScores);
+            var board = chessBoard.BitBoard;
+            return GetScoresOfTables(board, moveScores) +
+                GetScoresOfTables(board.ToTransposeLeft(), moveScores);
         }
         public static double EvalForAdd(ChessBoard chessBoard)
         {
-            return chessBoard.GetScoresOfTables(addScores);
+            var board = chessBoard.BitBoard;
+            return GetScoresOfTables(board, addScores) +
+                GetScoresOfTables(board.ToTransposeLeft(), addScores);
         }
 
+        private static double GetScoresOfTables(Board board, double[] scoreTables)
+        {
+            return scoreTables[board & RowMask] +
+                               scoreTables[(board >> 16) & RowMask] +
+                               scoreTables[(board >> 32) & RowMask] +
+                               scoreTables[(board >> 48) & RowMask];
+        }
     }
 }

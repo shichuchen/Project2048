@@ -12,10 +12,6 @@ namespace Project2048
             GameManager gameManager = new GameManager();
             for (int round = 0; round < maxRound; ++round)
             {
-                if (gameManager.IsEnd())
-                {
-                    break;
-                }
                 Console.WriteLine("第{0}次:", round);
                 ChessBoard chessBoard = new ChessBoard();
                 gameManager.OnEachRoundStart(chessBoard);
@@ -30,7 +26,7 @@ namespace Project2048
                         gameManager.OnEachRoundEnd(chessBoard);
                         break;
                     }
-                    var ai = new AlphaBetaAI(chessBoard);
+                    var ai = new HashCacheAlphaBetaAI(chessBoard);
                     gameManager.OnEachMoveStart(chessBoard);
                     Direction direction = ai.GetMoveDirection();
                     gameManager.OnEachMoveEnd(chessBoard);

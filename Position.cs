@@ -1,7 +1,7 @@
 ﻿namespace Project2048
 {
     /// <summary>
-    /// Core class 
+    /// 定义棋子在棋盘中相对位置的类, 对于位棋盘, 表示移位值.
     /// </summary>
     public class Position : NamedInt
     {

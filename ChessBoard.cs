@@ -169,16 +169,6 @@ namespace Project2048
             }
             return BitBoardHandler.ToLine(levels);
         }
-        public double GetScoresOfTables(double[] scoreTables)
-        {
-            if (scoreTables.Length != LineMaxValue)
-            {
-                throw new ArgumentException();
-            }
-            return GetLinesScoresOfTables(BitBoard, scoreTables) +
-                GetLinesScoresOfTables(BitBoard.ToTransposeLeft(), scoreTables);
-
-        }
         private double GetLinesScoresOfTables(Board board, double[] scoreTables)
         {
             return scoreTables[board.GetLine(0)] +
@@ -217,7 +207,7 @@ namespace Project2048
         }
         public Board MoveRight()
         {
-            var result = BitBoard;
+            Board result = BitBoard;
             result ^= (Board)moveRightLines[BitBoard.GetLine(0)] << 0;
             result ^= (Board)moveRightLines[BitBoard.GetLine(1)] << 16;
             result ^= (Board)moveRightLines[BitBoard.GetLine(2)] << 32;
@@ -257,18 +247,9 @@ namespace Project2048
         }
         private Position RandomPosition()
         {
-            var EmptyPositions = new List<Position>();
-            var temp = BitBoard;
-            foreach (Position position in InBoardPositions)
-            {
-                if ((temp & LevelMask) == 0)
-                {
-                    EmptyPositions.Add(position);
-                }
-                temp >>= 4;
-            }
-            int randomIndex = RandomGenerator.Next(EmptyPositions.Count);
-            return EmptyPositions[randomIndex];
+            List<Position> emptyPositions = GetEmptyPositions();
+            int randomIndex = RandomGenerator.Next(emptyPositions.Count);
+            return emptyPositions[randomIndex];
         }
         /// <summary>
         /// 以0.9的概率获取2, 以0.1的概率获取4

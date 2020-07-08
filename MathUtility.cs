@@ -1,6 +1,6 @@
 ﻿namespace Project2048
 {
-    class MathUtility
+    public static class MathUtility
     {
         public static double Clamp(double value, double min, double max)
         {
@@ -13,6 +13,13 @@
                 return max;
             }
             return value;
+        }
+
+        public static void Swap<T>(ref T lhs, ref T rhs)
+        {
+            T temp = lhs;
+            lhs = rhs;
+            rhs = temp;
         }
     }
 }

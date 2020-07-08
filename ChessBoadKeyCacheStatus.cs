@@ -3,38 +3,20 @@ using System.Linq;
 
 namespace Project2048
 {
-    class CacheStatus<TDecision, TStatus>
+    class ChessBoadKeyCacheStatus<TDecision, TStatus>
         where TStatus : class, new()
     {
-        public CacheStatus(TDecision initBestDecision)
+        public ChessBoadKeyCacheStatus(TDecision initBestDecision)
         {
             BestDecision = initBestDecision;
             this.initBestDecision = initBestDecision;
         }
         private Dictionary<ChessBoard, TDecision> boardDecisionMap;
-        private ChessBoard[] sortedBoards;
         private Dictionary<ChessBoard, TStatus> boardStatusMap;
         private readonly TDecision initBestDecision;
-        private TDecision bestDecision;
-        public TDecision BestDecision
-        {
-            get
-            {
-                return bestDecision;
-            }
-            set
-            {
-                //{   if(Equals(bestDecision,value))
-                //    {
-                //        return;
-                //    }
-                bestDecision = value;
-                //if (!(boardDecisionMap is null))
-                //{
-                //    SortBoards();
-                //}                              
-            }
-        }
+        private ChessBoard[] sortedBoards;
+
+        public TDecision BestDecision { get; set; }
         public void AddBoard(TDecision decision, ChessBoard chessBoard)
         {
             if (boardStatusMap is null)
@@ -54,44 +36,51 @@ namespace Project2048
         }
         public ChessBoard[] GetBoards()
         {
-            if (boardStatusMap is null)
-            {
-                return new ChessBoard[] { };
-            }
             if (Equals(initBestDecision, BestDecision))
-            {
-                return boardStatusMap.Keys.ToArray();
+            {   
+                if(sortedBoards is null)
+                {
+                    sortedBoards = boardDecisionMap.Keys.ToArray();
+                }
             }
             else
             {
                 SortBoards();
-                return sortedBoards;
             }
+            return sortedBoards;
         }
-        public void SortBoards()
-        {
-            var boardKeys = boardDecisionMap.Keys;
-            var boards = boardKeys.ToArray();
-            var tempSortedBoards = new ChessBoard[boards.Length];
-            int sortedIndex = 1;
-            foreach (var chessBoard in boardKeys)
+        public void  SortBoards()
+        {   
+            if(Equals(sortedBoards[0], BestDecision))
             {
-                if (tempSortedBoards[0] is null &&
+                return;
+            }
+            Dictionary<ChessBoard, TDecision>.KeyCollection boardKeys = boardDecisionMap.Keys;
+            ChessBoard[] boards = boardKeys.ToArray();
+            sortedBoards = new ChessBoard[boards.Length];
+            int sortedIndex = 1;
+            foreach (ChessBoard chessBoard in boardKeys)
+            {
+                if (sortedBoards[0] is null &&
                     Equals(boardDecisionMap[chessBoard], BestDecision))
                 {
-                    tempSortedBoards[0] = chessBoard;
+                    sortedBoards[0] = chessBoard;
                 }
                 else
                 {
-                    tempSortedBoards[sortedIndex] = chessBoard;
+                    if (Equals(boardDecisionMap[chessBoard], BestDecision) && sortedIndex > 1)
+                    {
+                        var tempBoard = sortedBoards[1];
+                        sortedBoards[1] = chessBoard;
+                        sortedBoards[sortedIndex] = tempBoard;
+                    }
+                    else
+                    {
+                        sortedBoards[sortedIndex] = chessBoard;
+                    }
                     ++sortedIndex;
                 }
             }
-            if (sortedBoards is null)
-            {
-                sortedBoards = new ChessBoard[boards.Length];
-            }
-            sortedBoards = tempSortedBoards;
         }
         public TDecision GetDecision(ChessBoard chessBoard)
         {
