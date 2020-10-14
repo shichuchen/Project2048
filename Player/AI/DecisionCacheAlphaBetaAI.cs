@@ -29,7 +29,7 @@ namespace Project2048.Player
             private static TimeRecorder timeRecorder;
             private const int MinDepth = 6;
             private const Direction InitBestDirection = Direction.None;
-            private const Position InitBestPosition = null;
+            private static  readonly Position initBestPosition = new Position();
             private static int targetDepth = MinDepth;
             private static readonly Position[] blankPositions = { };
 
@@ -136,7 +136,7 @@ namespace Project2048.Player
                 {
                     if (levelTwoPositionStatus is null)
                     {
-                        levelTwoPositionStatus = new DecisionKeyCacheStatus<Position, SearchState>(InitBestPosition);
+                        levelTwoPositionStatus = new DecisionKeyCacheStatus<Position, SearchState>(initBestPosition);
                     }
                     levelTwoPositionStatus.AddDecision(position);
                 }
@@ -148,7 +148,7 @@ namespace Project2048.Player
                 {
                     if (levelOnePositionStatus is null)
                     {
-                        levelOnePositionStatus = new DecisionKeyCacheStatus<Position, SearchState>(InitBestPosition);
+                        levelOnePositionStatus = new DecisionKeyCacheStatus<Position, SearchState>(initBestPosition);
                     }
                     levelOnePositionStatus.AddDecision(position);
                 }

@@ -61,7 +61,6 @@
     <Compile Include="Player\ISearcher.cs" />
     <Compile Include="Core\MathUtility.cs" />
     <Compile Include="Core\NamedDouble.cs" />
-    <Compile Include="Core\NamedInt.cs" />
     <Compile Include="Core\Position.cs" />
     <Compile Include="Core\RandomGenerator.cs" />
     <Compile Include="Core\Settings.cs" />

@@ -41,7 +41,7 @@ namespace Project2048.Player
 
             private const int MinDepth = 6;
             private const Direction InitBestDirection = Direction.None;
-            private const Position InitBestPosition = null;
+            private static  readonly Position initBestPosition = new Position();
             private static int targetDepth = MinDepth;
 
             private ChessBoadKeyCacheStatus<Direction, SearchState> directionStatus;
@@ -127,7 +127,7 @@ namespace Project2048.Player
                 {
                     visitedThisState = true;
                     var candidates = Candidates.AllIn(chessBoard);
-                    positionStatus = new ChessBoadKeyCacheStatus<Position, SearchState>(InitBestPosition);
+                    positionStatus = new ChessBoadKeyCacheStatus<Position, SearchState>(initBestPosition);
                     foreach (int level in candidates.Levels)
                     {
                         foreach (var position in candidates[level])

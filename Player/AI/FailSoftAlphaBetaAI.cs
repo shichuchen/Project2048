@@ -244,7 +244,7 @@ namespace Project2048.Player
 
             var emptyPositions = chessBoard.GetEmptyPositions();
             var prevBestPosition = prevDecision.bestPosition;
-            if (prevBestPosition is null)
+            if (prevBestPosition != 0)
             {
                 return emptyPositions.ToArray();
             }
