@@ -2,7 +2,7 @@
 
 namespace Project2048
 {
-    public class TimeRecorder : ITimeRecorder
+    public class TimeRecorder 
     {
         private TimeSpan startTimeSpan;
         public TimeRecorder()
