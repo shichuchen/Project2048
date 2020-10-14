@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Project2048
+namespace Project2048.Core
 {
     using Board = UInt64;
     using Direction = Settings.Direction;
@@ -21,6 +21,7 @@ namespace Project2048
         {
             BitBoard = board;
         }
+
         #region const and static
         public static readonly int[] AddLevels = { 1, 2 };
         public const double levelTwoPossibility = 0.1;
@@ -48,17 +49,7 @@ namespace Project2048
         public Board BitBoard { get; private set; }
         public int Score => (int)GetLinesScoresOfTables(BitBoard, lineScores);
 
-        public int EmptyCount
-        {
-            get
-            {
-                if (BitBoard == 0UL)
-                {
-                    return BoardSize;
-                }
-                return GetEmptyCount();
-            }
-        }
+        public int EmptyCount => BitBoard == 0UL ? BoardSize : GetEmptyCount();
         public int MaxValue => GetMaxValue();
 
         public int DistinctCount => GetDistinctValuesCount();

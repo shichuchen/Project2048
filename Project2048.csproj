@@ -64,7 +64,7 @@
     <Compile Include="Core\NamedInt.cs" />
     <Compile Include="Core\Position.cs" />
     <Compile Include="Core\RandomGenerator.cs" />
-    <Compile Include="Settings.cs" />
+    <Compile Include="Core\Settings.cs" />
     <Compile Include="Core\TimeRecorder.cs" />
     <Compile Include="Core\Weight.cs" />
     <Compile Include="Core\Weights.cs" />

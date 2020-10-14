@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Project2048.Core;
 
-namespace Project2048
+namespace Project2048.Player
 {
     /// <summary>
     /// 在搜索环节需要预测对方落子的位置

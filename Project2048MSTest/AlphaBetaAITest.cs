@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Project2048;
+using Project2048.Core;
+using Project2048.Player;
 
 namespace Project2048MSTest
 {
@@ -16,7 +17,7 @@ namespace Project2048MSTest
         [TestMethod]
         public ChessBoard GetTestBoard1()
         {
-            ChessBoard chessBoard = new ChessBoard();
+            var chessBoard = new ChessBoard();
             chessBoard.AddNew(new Position(0, 0), 2);
             chessBoard.AddNew(new Position(0, 1), 6);
             chessBoard.AddNew(new Position(0, 2), 11);
@@ -48,7 +49,7 @@ namespace Project2048MSTest
         [TestMethod]
         public ChessBoard GetTestBoard2()
         {
-            ChessBoard chessBoard = new ChessBoard();
+            var chessBoard = new ChessBoard();
             chessBoard.AddNew(new Position(0, 0), 0);
             chessBoard.AddNew(new Position(0, 1), 0);
             chessBoard.AddNew(new Position(0, 2), 0);

@@ -1,4 +1,4 @@
-﻿namespace Project2048
+﻿namespace Project2048.Core
 {
     public static class MathUtility
     {
@@ -8,18 +8,7 @@
             {
                 return min;
             }
-            if (value > max)
-            {
-                return max;
-            }
-            return value;
-        }
-
-        public static void Swap<T>(ref T lhs, ref T rhs)
-        {
-            var temp = lhs;
-            lhs = rhs;
-            rhs = temp;
+            return value > max ? max : value;
         }
     }
 }

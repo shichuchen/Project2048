@@ -1,7 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Project2048;
 using System;
-using System.Collections.Generic;
+using Project2048.Core;
 
 namespace Project2048MSTest
 {
@@ -12,13 +11,13 @@ namespace Project2048MSTest
         [TestMethod]
         public static void SingleDifferentAddSetEmptyTest()
         {
-            ChessBoard chessBoard = new ChessBoard();
-            ChessBoard newBoard = new ChessBoard(chessBoard);
-            List<Position> emptyPositions = chessBoard.GetEmptyPositions();
-            int[] emptyIndices = RandomGenerator.GetDistinctInts(2, chessBoard.EmptyCount);
+            var chessBoard = new ChessBoard();
+            var newBoard = new ChessBoard(chessBoard);
+            var emptyPositions = chessBoard.GetEmptyPositions();
+            var emptyIndices = RandomGenerator.GetDistinctInts(2, chessBoard.EmptyCount);
 
             chessBoard.AddNew(emptyPositions[emptyIndices[0]], 2);
-            ChessBoard addedBoard = new ChessBoard(chessBoard);
+            var addedBoard = new ChessBoard(chessBoard);
             chessBoard.SetEmpty(emptyPositions[emptyIndices[1]]);
 
             Assert.AreEqual(chessBoard.EmptyCount, 15);
@@ -29,10 +28,10 @@ namespace Project2048MSTest
         [TestMethod]
         public void SingleRandomAddTheSamePlaceTest()
         {
-            ChessBoard chessBoard = new ChessBoard();
+            var chessBoard = new ChessBoard();
             int randomRow = RandomGenerator.Next(4);
             int randomCol = RandomGenerator.Next(4);
-            Position randomPosition = new Position(randomRow, randomCol);
+            var randomPosition = new Position(randomRow, randomCol);
 
             chessBoard.AddNew(randomPosition, ChessBoardHandler.RandomLevel());
             chessBoard.AddNew(randomPosition, ChessBoardHandler.RandomLevel());
@@ -45,11 +44,11 @@ namespace Project2048MSTest
         {
             for (int i = 0; i < 100; ++i)
             {
-                ChessBoard chessBoard = new ChessBoard();
+                var chessBoard = new ChessBoard();
                 int occupyCount = RandomGenerator.Next(16);
 
                 ChessBoardHandler.RandomAddLevelOne(chessBoard, occupyCount);
-                List<Position> emptyPositions = chessBoard.GetEmptyPositions();
+                var emptyPositions = chessBoard.GetEmptyPositions();
 
                 Assert.AreEqual(emptyPositions.Count, 16 - occupyCount);
                 Assert.AreEqual(chessBoard.EmptyCount, 16 - occupyCount);
@@ -60,8 +59,8 @@ namespace Project2048MSTest
         [TestMethod]
         public void AllAddNewSetEmptyTest()
         {
-            ChessBoard addEmptyBoard = new ChessBoard();
-            ChessBoard emptyBoard = new ChessBoard();
+            var addEmptyBoard = new ChessBoard();
+            var emptyBoard = new ChessBoard();
             for (int row = 0; row < 4; ++row)
             {
                 for (int col = 0; col < 4; ++col)
@@ -78,7 +77,7 @@ namespace Project2048MSTest
         [TestMethod]
         public void RandomAddNewSetEmptyTest()
         {
-            ChessBoard addEmptyBoard = new ChessBoard();
+            var addEmptyBoard = new ChessBoard();
             var emptyPositions = addEmptyBoard.GetEmptyPositions();
             int occupyCount = RandomGenerator.Next(emptyPositions.Count);
             for (int i = 0; i < occupyCount; ++i)
@@ -86,7 +85,7 @@ namespace Project2048MSTest
                 addEmptyBoard.AddNew(emptyPositions[i], ChessBoardHandler.RandomLevel());
                 addEmptyBoard.SetEmpty(emptyPositions[i]);
             }
-            ChessBoard emptyBoard = new ChessBoard();
+            var emptyBoard = new ChessBoard();
             Assert.AreEqual(addEmptyBoard.EmptyCount, 16);
             Assert.AreEqual(addEmptyBoard, emptyBoard);
         }

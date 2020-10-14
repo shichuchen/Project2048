@@ -1,4 +1,7 @@
-﻿namespace Project2048
+﻿using Project2048.Core;
+using Project2048.Player;
+
+namespace Project2048
 {
     internal class Game
     {

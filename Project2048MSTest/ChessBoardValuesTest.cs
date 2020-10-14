@@ -1,10 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json.Bson;
-using Project2048;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Project2048.Core;
 
 namespace Project2048MSTest
 {   
@@ -14,8 +10,8 @@ namespace Project2048MSTest
         [TestMethod]
         public void TestMaxValue()
         {
-            ChessBoard chessBoard = new ChessBoard();
-            int[] levels = ChessBoardHandler.GetRandomCountDistinctLevels();
+            var chessBoard = new ChessBoard();
+            var levels = ChessBoardHandler.GetRandomCountDistinctLevels();
             int maxLevel = levels.Max();
             int levelIndex = 0;
             for(int row = 0; row < 4; ++row)
@@ -35,8 +31,8 @@ namespace Project2048MSTest
         [TestMethod]
         public void TestDistinctCount()
         {
-            ChessBoard chessBoard = new ChessBoard();
-            int[] levels = ChessBoardHandler.GetRandomCountDistinctLevels();
+            var chessBoard = new ChessBoard();
+            var levels = ChessBoardHandler.GetRandomCountDistinctLevels();
             int levelIndex = 0;
             for (int row = 0; row < 4; ++row)
             {

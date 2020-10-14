@@ -1,4 +1,4 @@
-﻿namespace Project2048
+﻿namespace Project2048.Core
 {
     /// <summary>
     /// 定义棋子在棋盘中相对位置的类, 对于位棋盘, 表示移位值.

@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Project2048;
+using Project2048.Core;
 
 namespace Project2048MSTest
 {
@@ -10,7 +10,7 @@ namespace Project2048MSTest
         [TestMethod]
         public void TestToplLineMoveUpFail()
         {
-            ChessBoard chessBoard = new ChessBoard();
+            var chessBoard = new ChessBoard();
 
             chessBoard.AddNew(new Position(0, 0), ChessBoardHandler.RandomLevel());
             chessBoard.AddNew(new Position(0, 1), ChessBoardHandler.RandomLevel());
@@ -25,8 +25,8 @@ namespace Project2048MSTest
         {
             for (int col = 0; col < 4; ++col)
             {
-                ChessBoard chessBoard = new ChessBoard();
-                int[] levels = RandomGenerator.GetDistinctInts(4, 1, 16);
+                var chessBoard = new ChessBoard();
+                var levels = RandomGenerator.GetDistinctInts(4, 1, 16);
 
                 chessBoard.AddNew(new Position(0, col), levels[0]);
                 chessBoard.AddNew(new Position(1, col), levels[1]);
@@ -41,9 +41,9 @@ namespace Project2048MSTest
         {
             for (int col = 0; col < 4; ++col)
             {
-                ChessBoard chessBoard = new ChessBoard();
-                int[] levels = RandomGenerator.GetDistinctInts(2, 1, 16);
-                int[] rows = RandomGenerator.GetDistinctInts(2, 1, 4);
+                var chessBoard = new ChessBoard();
+                var levels = RandomGenerator.GetDistinctInts(2, 1, 16);
+                var rows = RandomGenerator.GetDistinctInts(2, 1, 4);
 
                 chessBoard.AddNew(new Position(rows[0], col), levels[0]);
                 chessBoard.AddNew(new Position(rows[1], col), levels[1]);
@@ -57,9 +57,9 @@ namespace Project2048MSTest
         {
             for (int col = 0; col < 4; ++col)
             {
-                ChessBoard chessBoard = new ChessBoard();
+                var chessBoard = new ChessBoard();
                 int level = ChessBoardHandler.RandomLevel();
-                int[] rows = RandomGenerator.GetDistinctInts(2, 4);
+                var rows = RandomGenerator.GetDistinctInts(2, 4);
 
                 chessBoard.AddNew(new Position(rows[0], col), level);
                 chessBoard.AddNew(new Position(rows[1], col), level);
@@ -73,8 +73,8 @@ namespace Project2048MSTest
         {
             for (int col = 0; col < 4; ++col)
             {
-                ChessBoard chessBoard = new ChessBoard();
-                int[] levels = ChessBoardHandler.GetRandomDistinctLevels(2);
+                var chessBoard = new ChessBoard();
+                var levels = ChessBoardHandler.GetRandomDistinctLevels(2);
 
                 chessBoard.AddNew(new Position(0, col), levels[0]);
                 chessBoard.AddNew(new Position(1, col), levels[0]);
@@ -88,7 +88,7 @@ namespace Project2048MSTest
         [TestMethod]
         public void TestBottomLineMoveDownFail()
         {
-            ChessBoard chessBoard = new ChessBoard();
+            var chessBoard = new ChessBoard();
 
             chessBoard.AddNew(new Position(3, 0), ChessBoardHandler.RandomLevel());
             chessBoard.AddNew(new Position(3, 1), ChessBoardHandler.RandomLevel());
@@ -102,8 +102,8 @@ namespace Project2048MSTest
         {
             for (int col = 0; col < 4; ++col)
             {
-                ChessBoard chessBoard = new ChessBoard();
-                int[] levels = ChessBoardHandler.GetRandomDistinctLevels(4);
+                var chessBoard = new ChessBoard();
+                var levels = ChessBoardHandler.GetRandomDistinctLevels(4);
 
                 chessBoard.AddNew(new Position(0, col), levels[0]);
                 chessBoard.AddNew(new Position(1, col), levels[1]);
@@ -118,9 +118,9 @@ namespace Project2048MSTest
         {
             for (int col = 0; col < 4; ++col)
             {
-                ChessBoard chessBoard = new ChessBoard();
-                int[] levels = ChessBoardHandler.GetRandomDistinctLevels(2);
-                int[] rows = RandomGenerator.GetDistinctInts(2, 0, 3);
+                var chessBoard = new ChessBoard();
+                var levels = ChessBoardHandler.GetRandomDistinctLevels(2);
+                var rows = RandomGenerator.GetDistinctInts(2, 0, 3);
 
                 chessBoard.AddNew(new Position(rows[0], col), levels[0]);
                 chessBoard.AddNew(new Position(rows[1], col), levels[1]);
@@ -134,9 +134,9 @@ namespace Project2048MSTest
         {
             for (int col = 0; col < 4; ++col)
             {
-                ChessBoard chessBoard = new ChessBoard();
+                var chessBoard = new ChessBoard();
                 int level = ChessBoardHandler.RandomLevel();
-                int[] rows = RandomGenerator.GetDistinctInts(2, 4);
+                var rows = RandomGenerator.GetDistinctInts(2, 4);
 
                 chessBoard.AddNew(new Position(rows[0], col), level);
                 chessBoard.AddNew(new Position(rows[1], col), level);
@@ -150,8 +150,8 @@ namespace Project2048MSTest
         {
             for (int col = 0; col < 4; ++col)
             {
-                ChessBoard chessBoard = new ChessBoard();
-                int[] levels = ChessBoardHandler.GetRandomDistinctLevels(2);
+                var chessBoard = new ChessBoard();
+                var levels = ChessBoardHandler.GetRandomDistinctLevels(2);
 
                 chessBoard.AddNew(new Position(0, col), levels[0]);
                 chessBoard.AddNew(new Position(1, col), levels[0]);
@@ -165,7 +165,7 @@ namespace Project2048MSTest
         [TestMethod]
         public void TestLeftLineMoveLeftFail()
         {
-            ChessBoard chessBoard = new ChessBoard();
+            var chessBoard = new ChessBoard();
 
             chessBoard.AddNew(new Position(0, 0), ChessBoardHandler.RandomLevel());
             chessBoard.AddNew(new Position(1, 0), ChessBoardHandler.RandomLevel());
@@ -179,8 +179,8 @@ namespace Project2048MSTest
         {
             for (int row = 0; row < 4; ++row)
             {
-                ChessBoard chessBoard = new ChessBoard();
-                int[] levels = ChessBoardHandler.GetRandomDistinctLevels(4);
+                var chessBoard = new ChessBoard();
+                var levels = ChessBoardHandler.GetRandomDistinctLevels(4);
 
                 chessBoard.AddNew(new Position(row, 0), levels[0]);
                 chessBoard.AddNew(new Position(row, 1), levels[1]);
@@ -195,9 +195,9 @@ namespace Project2048MSTest
         {
             for (int row = 0; row < 4; ++row)
             {
-                ChessBoard chessBoard = new ChessBoard();
-                int[] levels = ChessBoardHandler.GetRandomDistinctLevels(2);
-                int[] cols = RandomGenerator.GetDistinctInts(2, 1, 4);
+                var chessBoard = new ChessBoard();
+                var levels = ChessBoardHandler.GetRandomDistinctLevels(2);
+                var cols = RandomGenerator.GetDistinctInts(2, 1, 4);
 
                 chessBoard.AddNew(new Position(row, cols[0]), levels[0]);
                 chessBoard.AddNew(new Position(row, cols[1]), levels[1]);
@@ -211,9 +211,9 @@ namespace Project2048MSTest
         {
             for (int row = 0; row < 4; ++row)
             {
-                ChessBoard chessBoard = new ChessBoard();
+                var chessBoard = new ChessBoard();
                 int level = ChessBoardHandler.RandomLevel();
-                int[] cols = RandomGenerator.GetDistinctInts(2, 4);
+                var cols = RandomGenerator.GetDistinctInts(2, 4);
 
                 chessBoard.AddNew(new Position(row, cols[0]), level);
                 chessBoard.AddNew(new Position(row, cols[1]), level);
@@ -227,8 +227,8 @@ namespace Project2048MSTest
         {
             for (int i = 0; i < 4; ++i)
             {
-                ChessBoard chessBoard = new ChessBoard();
-                int[] levels = ChessBoardHandler.GetRandomDistinctLevels(2);
+                var chessBoard = new ChessBoard();
+                var levels = ChessBoardHandler.GetRandomDistinctLevels(2);
 
                 chessBoard.AddNew(new Position(i, 0), levels[0]);
                 chessBoard.AddNew(new Position(i, 1), levels[0]);
@@ -242,7 +242,7 @@ namespace Project2048MSTest
         [TestMethod]
         public void TestRightLineMoveRightFail()
         {
-            ChessBoard chessBoard = new ChessBoard();
+            var chessBoard = new ChessBoard();
 
             chessBoard.AddNew(new Position(0, 3), ChessBoardHandler.RandomLevel());
             chessBoard.AddNew(new Position(1, 3), ChessBoardHandler.RandomLevel());
@@ -256,8 +256,8 @@ namespace Project2048MSTest
         {
             for (int row = 0; row < 4; ++row)
             {
-                ChessBoard chessBoard = new ChessBoard();
-                int[] levels = ChessBoardHandler.GetRandomDistinctLevels(4);
+                var chessBoard = new ChessBoard();
+                var levels = ChessBoardHandler.GetRandomDistinctLevels(4);
 
                 chessBoard.AddNew(new Position(row, 0), levels[0]);
                 chessBoard.AddNew(new Position(row, 1), levels[1]);
@@ -272,9 +272,9 @@ namespace Project2048MSTest
         {
             for (int row = 0; row < 4; ++row)
             {
-                ChessBoard chessBoard = new ChessBoard();
-                int[] levels = ChessBoardHandler.GetRandomDistinctLevels(2);
-                int[] cols = RandomGenerator.GetDistinctInts(2, 0, 3);
+                var chessBoard = new ChessBoard();
+                var levels = ChessBoardHandler.GetRandomDistinctLevels(2);
+                var cols = RandomGenerator.GetDistinctInts(2, 0, 3);
 
                 chessBoard.AddNew(new Position(row, cols[0]), levels[0]);
                 chessBoard.AddNew(new Position(row, cols[1]), levels[1]);
@@ -288,9 +288,9 @@ namespace Project2048MSTest
         {
             for (int row = 0; row < 4; ++row)
             {
-                ChessBoard chessBoard = new ChessBoard();
+                var chessBoard = new ChessBoard();
                 int level = ChessBoardHandler.RandomLevel();
-                int[] cols = RandomGenerator.GetDistinctInts(2, 4);
+                var cols = RandomGenerator.GetDistinctInts(2, 4);
 
                 chessBoard.AddNew(new Position(row, cols[0]), level);
                 chessBoard.AddNew(new Position(row, cols[1]), level);
@@ -304,8 +304,8 @@ namespace Project2048MSTest
         {
             for (int row = 0; row < 4; ++row)
             {
-                ChessBoard chessBoard = new ChessBoard();
-                int[] levels = ChessBoardHandler.GetRandomDistinctLevels(2);
+                var chessBoard = new ChessBoard();
+                var levels = ChessBoardHandler.GetRandomDistinctLevels(2);
 
                 chessBoard.AddNew(new Position(row, 0), levels[0]);
                 chessBoard.AddNew(new Position(row, 1), levels[0]);

@@ -1,12 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Project2048;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Project2048.Core;
 
 namespace Project2048MSTest
 {
-    using Direction = Settings.Direction;
     [TestClass]
     public class DecisionCacheAITest
     {
@@ -20,7 +16,7 @@ namespace Project2048MSTest
         [TestMethod]
         public ChessBoard GetTestBoard1()
         {
-            ChessBoard chessBoard = new ChessBoard();
+            var chessBoard = new ChessBoard();
             chessBoard.AddNew(new Position(0, 0), 0);
             chessBoard.AddNew(new Position(0, 1), 0);
             chessBoard.AddNew(new Position(0, 2), 1);

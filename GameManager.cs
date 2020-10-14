@@ -1,4 +1,7 @@
 ﻿using System;
+using Project2048.Core;
+using Project2048.Decorator;
+using Project2048.Player;
 
 namespace Project2048
 {

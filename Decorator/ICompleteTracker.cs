@@ -1,4 +1,4 @@
-﻿namespace Project2048
+﻿namespace Project2048.Decorator
 {
     internal interface ICompleteTracker
     {

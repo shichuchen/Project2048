@@ -1,6 +1,8 @@
 ﻿using System;
+using Project2048.Core;
+using Project2048.Player;
 
-namespace Project2048
+namespace Project2048.Decorator
 {   
     /// <summary>
     /// 利用退火算法改变棋盘参数, 机器学习

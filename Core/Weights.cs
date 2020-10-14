@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Project2048
+namespace Project2048.Core
 {
     public class Weights : List<Weight>
     {

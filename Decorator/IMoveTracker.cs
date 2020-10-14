@@ -1,4 +1,6 @@
-﻿namespace Project2048
+﻿using Project2048.Core;
+
+namespace Project2048.Decorator
 {
     internal interface IMoveTracker
     {

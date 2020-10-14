@@ -1,7 +1,7 @@
 ﻿using System;
+using Project2048.Core;
 
-
-namespace Project2048
+namespace Project2048.Player
 {
     using Direction = Settings.Direction;
 

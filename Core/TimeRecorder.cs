@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Project2048
+namespace Project2048.Core
 {
     public class TimeRecorder 
     {

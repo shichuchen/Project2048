@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Project2048;
+using Project2048.Core;
 
 namespace Project2048MSTest
 {
@@ -11,7 +11,7 @@ namespace Project2048MSTest
         {
             for (int i = 0; i < 100; ++i)
             {
-                ChessBoard chessBoard = new ChessBoard();
+                var chessBoard = new ChessBoard();
                 ChessBoardHandler.AddLeftDiagonal(chessBoard);
                 ChessBoardHandler.AddSymmetryToLeftDiagonal(chessBoard);
 
@@ -25,7 +25,7 @@ namespace Project2048MSTest
         {
             for (int i = 0; i < 100; ++i)
             {
-                ChessBoard chessBoard = new ChessBoard();
+                var chessBoard = new ChessBoard();
                 ChessBoardHandler.AddRightDiagonal(chessBoard);
                 ChessBoardHandler.AddSymmetryToRightDiagonal(chessBoard);
 

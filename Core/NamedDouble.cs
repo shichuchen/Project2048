@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace Project2048
+namespace Project2048.Core
 {
     public class NamedDouble : IComparable<double>, IEquatable<double>
     {

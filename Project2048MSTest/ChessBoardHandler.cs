@@ -1,5 +1,5 @@
-﻿using Project2048;
-using System;
+﻿using System;
+using Project2048.Core;
 
 namespace Project2048MSTest
 {

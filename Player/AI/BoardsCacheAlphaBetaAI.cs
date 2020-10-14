@@ -1,6 +1,8 @@
 ﻿using System;
+using Project2048.Core;
+using Project2048.Decorator;
 
-namespace Project2048
+namespace Project2048.Player
 {
     using Direction = Settings.Direction;
     public class BoardsCacheAlphaBetaAi : ISearcher

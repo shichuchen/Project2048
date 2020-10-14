@@ -1,4 +1,4 @@
-﻿namespace Project2048
+﻿namespace Project2048.Core
 {
     /// <summary>
     /// 负责权重的变化, 需要设置相应的最大最小值,

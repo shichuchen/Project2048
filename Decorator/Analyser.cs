@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Project2048.Core;
 
-namespace Project2048
+namespace Project2048.Decorator
 {   
     /// <summary>
     /// 分析棋盘数据

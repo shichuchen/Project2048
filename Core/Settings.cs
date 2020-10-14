@@ -1,4 +1,4 @@
-﻿namespace Project2048
+﻿namespace Project2048.Core
 {
     public class Settings
     {
@@ -10,6 +10,7 @@
             Right = 3,
             None = 4,
         }
+
         public static readonly Direction[] Directions =
         {
             Direction.Up, Direction.Down, Direction.Left, Direction.Right,

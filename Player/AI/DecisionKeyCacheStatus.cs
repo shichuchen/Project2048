@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Project2048
+namespace Project2048.Player
 {
     internal class DecisionKeyCacheStatus<TDecision, TStatus>: ICacheDecision<TDecision>
         where TStatus: class, new()

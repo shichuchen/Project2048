@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Project2048
+namespace Project2048.Core
 {
     public class RandomGenerator
     {

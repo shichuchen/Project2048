@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Project2048
+namespace Project2048.Core
 {
     using Board = UInt64;
     using Line = UInt16;

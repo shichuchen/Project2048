@@ -1,4 +1,4 @@
-﻿namespace Project2048
+﻿namespace Project2048.Player
 {
     internal interface ICacheDecision<TDecision>
     {   
