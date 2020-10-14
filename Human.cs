@@ -4,7 +4,8 @@
 namespace Project2048
 {
     using Direction = Settings.Direction;
-    class Human : IPlayer
+
+    internal class Human : IPlayer
     {
         public Direction GetMoveDirection()
         {

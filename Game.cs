@@ -1,16 +1,16 @@
 ﻿namespace Project2048
 {
-    using Direction = Settings.Direction;
-    class Game
+    internal class Game
     {
-        private static readonly bool printProcess = Settings.PrintProcess;
-        private const int maxRound = Settings.MaxRound;
+        private static readonly bool printProcess = Settings.printProcess;
+        private const int MaxRound = Settings.maxRound;
         private static GameManager gameManager;
         private static ChessBoard chessBoard;
-        static void Main()
+
+        private static void Main()
         {
             gameManager = new GameManager();
-            for (int round = 0; round < maxRound; ++round)
+            for (int round = 0; round < MaxRound; ++round)
             {
                 InitializeChessBoard();
                 PlayGame();
@@ -28,9 +28,9 @@
                     gameManager.OnEachRoundEnd(chessBoard);
                     break;
                 }
-                var ai = new DecisionCacheAlphaBetaAI(chessBoard);
+                var ai = new DecisionCacheAlphaBetaAi(chessBoard);
                 gameManager.OnEachMoveStart(chessBoard);
-                Direction direction = ai.GetMoveDirection();
+                var direction = ai.GetMoveDirection();
                 gameManager.OnEachMoveEnd(chessBoard);
                 if (chessBoard.Move(direction))
                 {

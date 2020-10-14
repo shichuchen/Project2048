@@ -2,13 +2,13 @@
 
 namespace Project2048
 {
-    class GameManager : IMoveTracker, IRoundTracker, ICompleteTracker
+    internal class GameManager : IMoveTracker, IRoundTracker, ICompleteTracker
     {
-        private readonly bool onAnalyse = Settings.OnAnalyse;
+        private readonly bool onAnalyse = Settings.onAnalyse;
         private readonly Analyser analyser;
-        private readonly bool onEvolve = Settings.OnEvolve;
+        private readonly bool onEvolve = Settings.onEvolve;
         private readonly AnnealingLearner learner;
-        private int round = 0;
+        private int round;
         public GameManager()
         {
             if (onAnalyse)

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Project2048
 {
-    class ChessBoadKeyCacheStatus<TDecision, TStatus> : ICacheDecision<TDecision>
+    internal class ChessBoadKeyCacheStatus<TDecision, TStatus> : ICacheDecision<TDecision>
         where TStatus : class, new()
     {
         public ChessBoadKeyCacheStatus(TDecision initBestDecision)
@@ -55,11 +55,11 @@ namespace Project2048
             {
                 return;
             }
-            Dictionary<ChessBoard, TDecision>.KeyCollection boardKeys = boardDecisionMap.Keys;
-            ChessBoard[] boards = boardKeys.ToArray();
+            var boardKeys = boardDecisionMap.Keys;
+            var boards = boardKeys.ToArray();
             sortedBoards = new ChessBoard[boards.Length];
             int sortedIndex = 1;
-            foreach (ChessBoard chessBoard in boardKeys)
+            foreach (var chessBoard in boardKeys)
             {
                 if (sortedBoards[0] is null &&
                     Equals(boardDecisionMap[chessBoard], BestDecision))

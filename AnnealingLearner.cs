@@ -5,7 +5,7 @@ namespace Project2048
     /// <summary>
     /// 利用退火算法改变棋盘参数, 机器学习
     /// </summary>
-    class AnnealingLearner : ILearner
+    internal class AnnealingLearner : ILearner
     {
         public AnnealingLearner()
         {
@@ -13,9 +13,9 @@ namespace Project2048
         }
         private static readonly int[] weightsChangeIndices = { 1, 2, 3, };
         private static readonly int totalChangeCnt = weightsChangeIndices.Length;
-        private const float startTemp = 100;
-        private const float endTemp = 0.1f;
-        private const float decreaseRate = 0.9f;
+        private const float StartTemp = 100;
+        private const float EndTemp = 0.1f;
+        private const float DecreaseRate = 0.9f;
         /// <summary>
         /// 一次接受的扰动所改变的权重数量
         /// </summary>
@@ -23,33 +23,33 @@ namespace Project2048
         /// <summary>
         /// 单一温度迭代次数
         /// </summary>
-        private const int tempIterCount = 10;
+        private const int TempIterCount = 10;
         /// <summary>
         /// 对一定数量进行评估, 消除由随机性产生的一定误差
         /// </summary>
-        private const int boardIterCnt = 2;
+        private const int BoardIterCnt = 2;
         /// <summary>
         /// 2048 + 1024
         /// </summary>
-        private const int oneRoundStartScore = 35000;
+        private const int OneRoundStartScore = 35000;
 
-        private float temperature = startTemp;
-        private float prevScore = oneRoundStartScore * boardIterCnt;
-        private int currTempIterCount = 0;
-        private int currBoardIterCount = 0;
-        private int currentScore = 0;
+        private float temperature = StartTemp;
+        private float prevScore = OneRoundStartScore * BoardIterCnt;
+        private int currTempIterCount;
+        private int currBoardIterCount;
+        private int currentScore;
         private Weights weights = new Weights();
 
-        public bool IsEnd { get { return temperature <= endTemp; } }
+        public bool IsEnd => temperature <= EndTemp;
         public void OnEachRoundStart(ChessBoard chessBoard) { }
         public void OnEachRoundEnd(ChessBoard chessBoard)
         {
             UpdateIter(chessBoard);
-            if (currBoardIterCount >= boardIterCnt)
+            if (currBoardIterCount >= BoardIterCnt)
             {
                 UpdateBestWeights();
                 ChangeWeights();
-                if (currTempIterCount >= tempIterCount)
+                if (currTempIterCount >= TempIterCount)
                 {
                     DecreaseTemperature();
                 }
@@ -75,14 +75,14 @@ namespace Project2048
             if (AcceptNewChange(deltaE))
             {
                 prevScore = score;
-                weights = Evaluator.weights;
+                weights = Evaluator.Weights;
                 PrintWeights();
             }
         }
 
         private void DecreaseTemperature()
         {
-            temperature *= decreaseRate;
+            temperature *= DecreaseRate;
             currTempIterCount = 0;
             Console.WriteLine("当前温度为:\t{0}", temperature);
         }
@@ -120,8 +120,8 @@ namespace Project2048
         }
         public void ChangeWeights()
         {
-            int[] indices = RandomGenerator.GetDistinctInts(weightChangeCnt, totalChangeCnt);
-            double[] rands = RandomGenerator.GetDoubles(weightChangeCnt);
+            var indices = RandomGenerator.GetDistinctInts(weightChangeCnt, totalChangeCnt);
+            var rands = RandomGenerator.GetDoubles(weightChangeCnt);
             for (int i = 0; i < weightChangeCnt; ++i)
             {
                 double interp = GetDisturbanceFactor(rands[i]);
@@ -131,9 +131,9 @@ namespace Project2048
         }
         private void SetEvaluatorWeights(int heurIndex, double interp)
         {
-            double minWeight = Evaluator.weights[heurIndex].Min;
-            double maxWeight = Evaluator.weights[heurIndex].Max;
-            Evaluator.weights.SetDeltaChangeToWeight(heurIndex, interp * (maxWeight - minWeight));
+            double minWeight = Evaluator.Weights[heurIndex].Min;
+            double maxWeight = Evaluator.Weights[heurIndex].Max;
+            Evaluator.Weights.SetDeltaChangeToWeight(heurIndex, interp * (maxWeight - minWeight));
         }
 
 

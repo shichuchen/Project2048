@@ -6,32 +6,32 @@ namespace Project2048
     using Line = UInt16;
     public static class BitBoardHandler
     {
-        public const int LevelMask = 0xF;
-        public const Board ColMask = 0x000F000F000F000FUL;
-        public const Board RowMask = 0xFFFFUL;
+        public const int levelMask = 0xF;
+        public const Board colMask = 0x000F000F000F000FUL;
+        public const Board rowMask = 0xFFFFUL;
         public static Line GetLine(this Board board, int lineIndex)
         {
             switch (lineIndex)
             {
                 case 0:
-                    return (Line)(board & RowMask);
+                    return (Line)(board & rowMask);
                 case 1:
-                    return (Line)((board >> 16) & RowMask);
+                    return (Line)((board >> 16) & rowMask);
                 case 2:
-                    return (Line)((board >> 32) & RowMask);
+                    return (Line)((board >> 32) & rowMask);
                 case 3:
-                    return (Line)((board >> 48) & RowMask);
+                    return (Line)((board >> 48) & rowMask);
             }
             throw new ArgumentException("lineIndex must be between 0 and 3");
         }
         public static int[] ToLevels(Line line)
         {
-            return new int[4]
+            return new[]
                 {
-                    (line >> 0)&LevelMask,
-                    (line >> 4)&LevelMask,
-                    (line >> 8)&LevelMask,
-                    (line >> 12)&LevelMask,
+                    (line >> 0)&levelMask,
+                    (line >> 4)&levelMask,
+                    (line >> 8)&levelMask,
+                    (line >> 12)&levelMask,
                 };
         }
         public static Line ToLine(int[] levels)
@@ -48,7 +48,7 @@ namespace Project2048
         public static Board ToTranspose(this Line line)
         {
             Board board = line;
-            return (board | (board << 12) | (board << 24) | (board << 36)) & ColMask;
+            return (board | (board << 12) | (board << 24) | (board << 36)) & colMask;
         }
         public static Line ToReverse(this Line lineToReverse)
         {
@@ -84,7 +84,7 @@ namespace Project2048
                 for (int col = 0; col < 4; ++col)
                 {
                     PrintBetweenCols();
-                    int level = (int)(bitBoard & LevelMask);
+                    int level = (int)(bitBoard & levelMask);
                     Console.Write("{0}", ToValue(level));
                     bitBoard >>= 4;
                 }

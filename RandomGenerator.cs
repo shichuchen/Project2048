@@ -42,7 +42,7 @@ namespace Project2048
         public static double[] GetDoubles(int count)
         {
             Renew();
-            double[] doubles = new double[count];
+            var doubles = new double[count];
             for (int i = 0; i < count; ++i)
             {
                 while (true)
@@ -65,7 +65,7 @@ namespace Project2048
         {
             Renew();
             // 用List.Add, 防止由于数组初始化导致0无法取到
-            List<int> ints = new List<int>(count);
+            var ints = new List<int>(count);
             for (int i = 0; i < count; ++i)
             {
                 ints.Add(random.Next(minValue, maxValue));
@@ -88,7 +88,7 @@ namespace Project2048
         {
             Renew();
             // 用List.Add, 防止由于数组初始化导致0无法取到
-            List<int> ints = new List<int>(count);
+            var ints = new List<int>(count);
             for (int i = 0; i < count; ++i)
             {
                 while (true)

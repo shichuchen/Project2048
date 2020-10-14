@@ -3,50 +3,50 @@
 namespace Project2048
 {
     using Direction = Settings.Direction;
-    public class BoardsCacheAlphaBetaAI : ISearcher
+    public class BoardsCacheAlphaBetaAi : ISearcher
     {
-        public BoardsCacheAlphaBetaAI(ChessBoard chessBoard)
+        public BoardsCacheAlphaBetaAi(ChessBoard chessBoard)
         {
             this.chessBoard = chessBoard;
         }
         private readonly ChessBoard chessBoard;
-        private static readonly bool printProcess = Settings.PrintProcess;
+        private static readonly bool printProcess = Settings.printProcess;
         private static readonly Direction[] directions = Settings.Directions;
-        private const double infinity = Evaluator.Infinity;
-        private const double lostPenality = -infinity / 3;
-        private const double bound = infinity / 2;
-        private static int CutOff = 0;
+        private const double Infinity = Evaluator.infinity;
+        private const double LostPenality = -Infinity / 3;
+        private const double Bound = Infinity / 2;
+        private static int cutOff;
         public int Depth { get; set; }
 
         public class SearchState
         {
-            public SearchState() { }
-            private static readonly int searchMilliSecs = Settings.MaxSearchMilliSecs;
+            private static readonly int searchMilliSecs = Settings.maxSearchMilliSecs;
 
-            private const int minDepth = 6;
-            private const Direction initBestDirection = Direction.None;
-            private const Position initBestPosition = null;
-            private static int TargetDepth = minDepth;
+            private const int MinDepth = 6;
+            private const Direction InitBestDirection = Direction.None;
+            private const Position InitBestPosition = null;
+            private static int targetDepth = MinDepth;
 
             private ChessBoadKeyCacheStatus<Direction, SearchState> directionStatus;
             private ChessBoadKeyCacheStatus<Position, SearchState> positionStatus;
             private TimeRecorder timeRecorder;
-            private bool VisitedThisState = false;
+            private bool visitedThisState;
 
             public int Depth { get; set; } = 1;
-            public int Turn { get; set; } = 0;
-            public double Alpha { get; set; } = -bound;
-            public double Beta { get; set; } = bound;
-            public bool OnMove { get { return (Turn & 1) == 0; } }
+            public int Turn { get; set; }
+            public double Alpha { get; set; } = -Bound;
+            public double Beta { get; set; } = Bound;
+            public bool OnMove => (Turn & 1) == 0;
+
             public Direction BestDirection
             {
-                get { return directionStatus.BestDecision; }
-                set { directionStatus.BestDecision = value; }
+                get => directionStatus.BestDecision;
+                set => directionStatus.BestDecision = value;
             }
             public Position BestPosition
             {
-                get { return positionStatus.BestDecision; }
-                set { positionStatus.BestDecision = value; }
+                get => positionStatus.BestDecision;
+                set => positionStatus.BestDecision = value;
             }
             public void Initialize(ChessBoard chessBoard)
             {
@@ -55,7 +55,7 @@ namespace Project2048
             }
             private void InitDepth(ChessBoard chessBoard)
             {
-                TargetDepth = Math.Max(minDepth, (chessBoard.DistinctCount - 2) * 2);
+                targetDepth = Math.Max(MinDepth, (chessBoard.DistinctCount - 2) * 2);
             }
             public void StartTimeRecord()
             {
@@ -65,32 +65,32 @@ namespace Project2048
             {
                 return 
                     timeRecorder.GetTotalMilliSeconds() >= searchMilliSecs
-                    && Depth >= TargetDepth
+                    && Depth >= targetDepth
                     ;
             }
             public double GetSearchTime()
             {
                 if (timeRecorder is null)
                 {
-                    throw new ArgumentNullException("Please initialize SearchState Before Searching");
+                    throw new NullReferenceException("Please initialize SearchState Before Searching");
                 }
                 return timeRecorder.GetTotalMilliSeconds();
             }
             public void ToNextRound()
             {
                 ++Depth;
-                Alpha = -bound;
-                Beta = bound;
+                Alpha = -Bound;
+                Beta = Bound;
             }
             public void TryBuildMoveStatus(ChessBoard chessBoard)
             {
-                if (!VisitedThisState)
+                if (!visitedThisState)
                 {
-                    VisitedThisState = true;
-                    directionStatus = new ChessBoadKeyCacheStatus<Direction, SearchState>(initBestDirection);
-                    foreach (Direction direction in directions)
+                    visitedThisState = true;
+                    directionStatus = new ChessBoadKeyCacheStatus<Direction, SearchState>(InitBestDirection);
+                    foreach (var direction in directions)
                     {
-                        ChessBoard newBoard = chessBoard.Copy();
+                        var newBoard = chessBoard.Copy();
                         TryAddDirectionStatus(direction, newBoard);
                     }
                 }
@@ -106,16 +106,16 @@ namespace Project2048
 
             public void TryBuildAddStatus(ChessBoard chessBoard)
             {
-                if (!VisitedThisState)
+                if (!visitedThisState)
                 {
-                    VisitedThisState = true;
-                    Candidates candidates = Candidates.AllIn(chessBoard);
-                    positionStatus = new ChessBoadKeyCacheStatus<Position, SearchState>(initBestPosition);
+                    visitedThisState = true;
+                    var candidates = Candidates.AllIn(chessBoard);
+                    positionStatus = new ChessBoadKeyCacheStatus<Position, SearchState>(InitBestPosition);
                     foreach (int level in candidates.Levels)
                     {
-                        foreach (Position position in candidates[level])
+                        foreach (var position in candidates[level])
                         {
-                            ChessBoard newBoard = chessBoard.Copy();
+                            var newBoard = chessBoard.Copy();
                             newBoard.AddNew(position, level);
                             positionStatus.AddBoard(position, newBoard);
                         }
@@ -145,13 +145,13 @@ namespace Project2048
             {
                 if (directionStatus is null)
                 {
-                    SearchState newState = positionStatus.GetStatus(chessBoard);
+                    var newState = positionStatus.GetStatus(chessBoard);
                     SetNextState(newState);
                     return newState;
                 }
                 else
                 {
-                    SearchState newState = directionStatus.GetStatus(chessBoard);
+                    var newState = directionStatus.GetStatus(chessBoard);
                     SetNextState(newState);
                     return newState;
                 }
@@ -166,8 +166,8 @@ namespace Project2048
         }        
         public Direction GetMoveDirection()
         {
-            CutOff = 0;
-            SearchState searchState = new SearchState();
+            cutOff = 0;
+            var searchState = new SearchState();
             searchState.Initialize(chessBoard);
             while (!searchState.TimeOut())
             {
@@ -183,7 +183,7 @@ namespace Project2048
         private static void AnalyserRecordResult(SearchState searchState)
         {
             Analyser.StoreDepth(searchState.Depth);
-            Analyser.StoreCutOff(CutOff);
+            Analyser.StoreCutOff(cutOff);
         }
 
         private void PrintProcess(SearchState searchState)
@@ -192,20 +192,19 @@ namespace Project2048
             {
                 Console.WriteLine("\tDirection:\t{0}", searchState.BestDirection);
                 Console.WriteLine("\tDepth:\t{0}", Depth);
-                Console.WriteLine("\tCutOff:\t{0}", CutOff);
+                Console.WriteLine("\tCutOff:\t{0}", cutOff);
                 Console.WriteLine("\tSearchTime:\t{0}\n", searchState.GetSearchTime());
             }
         }
         public double AlphaBeta(SearchState searchState)
         {
-            double val;           
             if (chessBoard.IsGameOver())
             {
-                return lostPenality - searchState.Depth;
+                return LostPenality - searchState.Depth;
             }
             if (searchState.Depth == 0)
             {
-                val = Evaluator.EvalForMove(chessBoard);
+                var val = Evaluator.EvalForMove(chessBoard);
                 if (!searchState.OnMove)
                 {
                     val = -val;
@@ -225,14 +224,13 @@ namespace Project2048
 
         private void MoveSearch(SearchState searchState)
         {
-            double val;
             searchState.TryBuildMoveStatus(chessBoard);
-            ChessBoard[] boards = searchState.GetBoards();
+            var boards = searchState.GetBoards();
             foreach (var board in boards)
             {
-                BoardsCacheAlphaBetaAI newAI = new BoardsCacheAlphaBetaAI(board);
-                SearchState newState = searchState.GetState(board);
-                val = -newAI.AlphaBeta(newState);
+                var newAi = new BoardsCacheAlphaBetaAi(board);
+                var newState = searchState.GetState(board);
+                var val = -newAi.AlphaBeta(newState);
                 if (val > searchState.Alpha)
                 {
                     searchState.Alpha = val;
@@ -248,12 +246,12 @@ namespace Project2048
         private void AddSearch(SearchState searchState)
         {
             searchState.TryBuildAddStatus(chessBoard);
-            ChessBoard[] boards = searchState.GetBoards();
+            var boards = searchState.GetBoards();
             foreach (var board in boards)
             {
-                BoardsCacheAlphaBetaAI newAI = new BoardsCacheAlphaBetaAI(board);
-                SearchState newState = searchState.GetState(board);
-                double val = -newAI.AlphaBeta(newState);
+                var newAi = new BoardsCacheAlphaBetaAi(board);
+                var newState = searchState.GetState(board);
+                double val = -newAi.AlphaBeta(newState);
                 if (val > searchState.Alpha)
                 {
                     searchState.Alpha = val;

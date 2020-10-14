@@ -6,7 +6,7 @@ namespace Project2048
     using Board = UInt64;
     using Direction = Settings.Direction;
     using Line = UInt16;
-    public class ChessBoard
+    public class ChessBoard: IEquatable<ChessBoard>
     {
         static ChessBoard()
         {
@@ -23,12 +23,12 @@ namespace Project2048
         }
         #region const and static
         public static readonly int[] AddLevels = { 1, 2 };
-        public const double LevelTwoPossibility = 0.1;
-        public const int LineMaxValue = 65536;
+        public const double levelTwoPossibility = 0.1;
+        public const int lineMaxValue = 65536;
 
-        private const int boardSize = 16;
+        private const int BoardSize = 16;
         private static readonly Direction[] directions = Settings.Directions;
-        private static readonly Position[] InBoardPositions =
+        private static readonly Position[] inBoardPositions =
         {
             new Position(0,0), new Position(0,1), new Position(0,2), new Position(0,3),
             new Position(1,0), new Position(1,1), new Position(1,2), new Position(1,3),
@@ -37,56 +37,43 @@ namespace Project2048
         };
 
         private const int LevelMask = 0xF;
-        private static readonly Line[] moveLeftLines = new Line[LineMaxValue];
-        private static readonly Line[] moveRightLines = new Line[LineMaxValue];
-        private static readonly Board[] moveUpLines = new Board[LineMaxValue];
-        private static readonly Board[] moveDownLines = new Board[LineMaxValue];
-        private static readonly double[] lineScores = new double[LineMaxValue];
+        private static readonly Line[] moveLeftLines = new Line[lineMaxValue];
+        private static readonly Line[] moveRightLines = new Line[lineMaxValue];
+        private static readonly Board[] moveUpLines = new Board[lineMaxValue];
+        private static readonly Board[] moveDownLines = new Board[lineMaxValue];
+        private static readonly double[] lineScores = new double[lineMaxValue];
         #endregion
 
 
-        public Board BitBoard { get; private set; } = 0;
-        public int Score
-        {
-            get
-            {
-                return (int)GetLinesScoresOfTables(BitBoard, lineScores);
-            }
-        }
+        public Board BitBoard { get; private set; }
+        public int Score => (int)GetLinesScoresOfTables(BitBoard, lineScores);
+
         public int EmptyCount
         {
             get
             {
                 if (BitBoard == 0UL)
                 {
-                    return boardSize;
+                    return BoardSize;
                 }
                 return GetEmptyCount();
             }
         }
-        public int MaxValue
-        {
-            get
-            {
-                return GetMaxValue();
-            }
-        }
-        public int DistinctCount
-        {
-            get
-            {
-                return GetDistinctValuesCount();
-            }
-        }
+        public int MaxValue => GetMaxValue();
+
+        public int DistinctCount => GetDistinctValuesCount();
+
         public override bool Equals(object other)
         {
-            if (other.GetType() != GetType() && other.GetType() != typeof(string))
+            if (other is null)
             {
                 return false;
             }
-            return Equals((ChessBoard)other);
+
+            return other is ChessBoard board && Equals(board);
         }
-        private bool Equals(ChessBoard other)
+
+        public bool Equals(ChessBoard other)
         {
             if (other is null)
             {
@@ -100,7 +87,7 @@ namespace Project2048
         }
         public static void InitializeMoveResults()
         {
-            for (int line = 0; line < LineMaxValue; ++line)
+            for (int line = 0; line < lineMaxValue; ++line)
             {
                 CacheLineScores(line);
                 CacheLineMoveResult(line);
@@ -108,7 +95,7 @@ namespace Project2048
         }
         private static void CacheLineScores(int line)
         {
-            int[] levels = BitBoardHandler.ToLevels((Line)line);
+            var levels = BitBoardHandler.ToLevels((Line)line);
             int score = 0;
             for (int i = 0; i < 4; ++i)
             {
@@ -139,7 +126,7 @@ namespace Project2048
         }
         private static Line MoveLineLeft(int line)
         {
-            int[] levels = BitBoardHandler.ToLevels((Line)line);
+            var levels = BitBoardHandler.ToLevels((Line)line);
 
             for (int i = 0; i < 3; ++i)
             {
@@ -247,7 +234,7 @@ namespace Project2048
         }
         private Position RandomPosition()
         {
-            List<Position> emptyPositions = GetEmptyPositions();
+            var emptyPositions = GetEmptyPositions();
             int randomIndex = RandomGenerator.Next(emptyPositions.Count);
             return emptyPositions[randomIndex];
         }
@@ -258,21 +245,21 @@ namespace Project2048
         private int RandomLevel()
         {
             int number = RandomGenerator.Next(10);
-            return number < LevelTwoPossibility * 10 ? AddLevels[1] : AddLevels[0];
+            return number < levelTwoPossibility * 10 ? AddLevels[1] : AddLevels[0];
         }
         public List<Position> GetEmptyPositions()
         {
-            List<Position> EmptyPositions = new List<Position>();
+            var emptyPositions = new List<Position>();
             Board board = BitBoard;
-            foreach (Position position in InBoardPositions)
+            foreach (var position in inBoardPositions)
             {
                 if ((board & LevelMask) == 0)
                 {
-                    EmptyPositions.Add(position);
+                    emptyPositions.Add(position);
                 }
                 board >>= 4;
             }
-            return EmptyPositions;
+            return emptyPositions;
         }
         private int GetMaxValue()
         {
@@ -291,7 +278,7 @@ namespace Project2048
         }
         private int GetDistinctValuesCount()
         {
-            HashSet<int> distinctLevels = new HashSet<int>();
+            var distinctLevels = new HashSet<int>();
             Board board = BitBoard;
             while (board > 0)
             {
@@ -333,8 +320,6 @@ namespace Project2048
                 case Direction.Right:
                     result = MoveRight();
                     break;
-                default:
-                    break;
             }
             return result;
         }
@@ -345,7 +330,7 @@ namespace Project2048
         }
         public bool CanMove()
         {
-            foreach (Direction direction in directions)
+            foreach (var direction in directions)
             {
                 if (CanMove(direction))
                 {

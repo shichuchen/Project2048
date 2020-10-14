@@ -17,7 +17,7 @@
             Col = y;
         }
         public static implicit operator Position(int value) { return new Position(value); }
-        public int Row { get; private set; }
-        public int Col { get; private set; }
+        public int Row { get; }
+        public int Col { get; }
     }
 }

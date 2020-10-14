@@ -1,6 +1,6 @@
 ﻿namespace Project2048
 {
-    interface ITimeRecorder
+    internal interface ITimeRecorder
     {
         void StartTimeRecord();
         double GetTotalSeconds();

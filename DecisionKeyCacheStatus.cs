@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Project2048
 {
-    class DecisionKeyCacheStatus<TDecision, TStatus>: ICacheDecision<TDecision>
+    internal class DecisionKeyCacheStatus<TDecision, TStatus>: ICacheDecision<TDecision>
         where TStatus: class, new()
     {   
         public DecisionKeyCacheStatus(TDecision initBestDecision)

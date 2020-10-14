@@ -30,38 +30,22 @@ namespace Project2048
             // 7smoothpow
             Add(new Weight(4, 0.1, 10));
         }
-        public double EmptyWeight
-        {
-            get { return this[0]; }
-        }
-        public double SumWeight
-        {
-            get { return this[1]; }
-        }
-        public double MonoWeight
-        {
-            get { return this[2]; }
-        }
-        public double MergeWeight
-        {
-            get { return this[3]; }
-        }
-        public double SmoothWeight
-        {
-            get { return this[4]; }
-        }
-        public double SumPower
-        {
-            get { return this[5]; }
-        }
-        public double MoveMonoPower
-        {
-            get { return this[6]; }
-        }
-        public double SmoothPower
-        {
-            get { return this[7]; }
-        }
+        public double EmptyWeight => this[0];
+
+        public double SumWeight => this[1];
+
+        public double MonoWeight => this[2];
+
+        public double MergeWeight => this[3];
+
+        public double SmoothWeight => this[4];
+
+        public double SumPower => this[5];
+
+        public double MoveMonoPower => this[6];
+
+        public double SmoothPower => this[7];
+
         public void SetInterpolationToWeight(int weightIndex, double interp)
         {
             this[weightIndex] = this[weightIndex].SetInterpolation(interp);

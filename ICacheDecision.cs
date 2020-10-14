@@ -1,6 +1,6 @@
 ﻿namespace Project2048
 {
-    interface ICacheDecision<TDecision>
+    internal interface ICacheDecision<TDecision>
     {   
         TDecision BestDecision { get; set; }
     }

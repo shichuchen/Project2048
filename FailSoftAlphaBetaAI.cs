@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 namespace Project2048
 {
     using Direction = Settings.Direction;
     using Board = UInt64;
-    public class FailSoftAlphaBetaAI : IPlayer
+    public class FailSoftAlphaBetaAi : IPlayer
     {
         public class Decision
         {
@@ -15,32 +14,32 @@ namespace Project2048
         }
         public class HashItem
         {
-            public int depth = 0;
+            public int depth;
             public int hashFlag = -1;
-            public double value = 0;
+            public double value;
             public Decision decision = new Decision();
 
         }
-        public FailSoftAlphaBetaAI(ChessBoard chessBoard)
+        public FailSoftAlphaBetaAi(ChessBoard chessBoard)
         {
             this.chessBoard = chessBoard;
         }
 
         private readonly ChessBoard chessBoard;
         private static readonly Direction[] directions = Settings.Directions;
-        private static readonly bool printProcess = Settings.PrintProcess;
+        private static readonly bool printProcess = Settings.printProcess;
         private static readonly int[] addLevels = ChessBoard.AddLevels;
-        private const double infinity = Evaluator.Infinity;
-        private const double bound = infinity / 2;
-        private const double lostPenality = -infinity / 3;
-        private const int maxMilliSecs = Settings.MaxSearchMilliSecs;
-        private const int hashExact = 0;
-        private const int hashAlpha = 1;
-        private const int hashBeta = 2;
+        private const double Infinity = Evaluator.infinity;
+        private const double Bound = Infinity / 2;
+        private const double LostPenality = -Infinity / 3;
+        private const int MaxMilliSecs = Settings.maxSearchMilliSecs;
+        private const int HashExact = 0;
+        private const int HashAlpha = 1;
+        private const int HashBeta = 2;
         private static Dictionary<Board, HashItem> hashTable;
         private static int targetDepth;
         private static int depth = 1;
-        private static int curOff = 0;
+        private static int curOff;
         private Direction bestDirection = Direction.None;
         private static TimeRecorder timeRecorder;
 
@@ -51,7 +50,7 @@ namespace Project2048
             targetDepth = Math.Max(6, (chessBoard.DistinctCount - 2) * 2);
             while (NotComplete())
             {
-                MoveSearch(depth, -bound, bound);
+                MoveSearch(depth, -Bound, Bound);
                 ++depth;
             }
             Analyser.StoreDepth(depth);
@@ -71,7 +70,7 @@ namespace Project2048
 
         private static bool NotComplete()
         {
-            return timeRecorder.GetTotalMilliSeconds() <= maxMilliSecs
+            return timeRecorder.GetTotalMilliSeconds() <= MaxMilliSecs
                             || depth <= targetDepth;
         }
 
@@ -92,15 +91,15 @@ namespace Project2048
                     prevDecision = hashItem.decision;
                     switch (hashItem.hashFlag)
                     {
-                        case hashExact:
+                        case HashExact:
                             return hashItem.value;
-                        case hashAlpha:
+                        case HashAlpha:
                             if (hashItem.value <= alpha)
                             {
                                 return alpha;
                             }
                             break;
-                        case hashBeta:
+                        case HashBeta:
                             if (hashItem.value >= beta)
                             {
                                 return beta;
@@ -110,12 +109,12 @@ namespace Project2048
                 }
             }
             prevDecision = new Decision();
-            return infinity;
+            return Infinity;
         }
         private void RecordHash(int depth, double value, int hashFlag, Decision decision)
         {
             Board board = chessBoard.BitBoard;
-            if (hashTable.TryGetValue(board, out HashItem hashItem))
+            if (hashTable.TryGetValue(board, out var hashItem))
             {
                 if (hashItem.depth > depth)
                 {
@@ -133,39 +132,39 @@ namespace Project2048
         }
         public double MoveSearch(int depth, double alpha, double beta)
         {
-            int hashFlag = hashAlpha;
+            int hashFlag = HashAlpha;
             double val;
-            if ((val = ProbeHash(depth, alpha, beta, out Decision prevDecision)) != infinity)
+            if ((val = ProbeHash(depth, alpha, beta, out var prevDecision)) != Infinity)
             {
                 ++curOff;
                 return val;
             }
             if (chessBoard.IsGameOver())
             {
-                return lostPenality + depth;
+                return LostPenality + depth;
             }
             if (depth == 0)
             {
                 val = Evaluator.EvalForMove(chessBoard);
-                RecordHash(depth, val, hashExact, prevDecision);
+                RecordHash(depth, val, HashExact, prevDecision);
                 return val;
             }
-            Direction[] moveDirections = SortedDirections(prevDecision);
-            foreach (Direction direction in moveDirections)
+            var moveDirections = SortedDirections(prevDecision);
+            foreach (var direction in moveDirections)
             {
                 var newBoard = chessBoard.Copy();
                 if (newBoard.Move(direction))
                 {
-                    var ai = new FailSoftAlphaBetaAI(newBoard);
+                    var ai = new FailSoftAlphaBetaAi(newBoard);
                     val = -ai.AddSearch(depth - 1, -beta, -alpha);
                     if (val >= beta)
                     {
-                        RecordHash(depth, beta, hashBeta, prevDecision);
+                        RecordHash(depth, beta, HashBeta, prevDecision);
                         return beta;
                     }
                     if (val > alpha)
                     {
-                        hashFlag = hashExact;
+                        hashFlag = HashExact;
                         alpha = val;
                         bestDirection = direction;
                         prevDecision.bestDirection = direction;
@@ -183,11 +182,11 @@ namespace Project2048
             {
                 return directions;
             }
-            Direction[] moveDirections;
-            moveDirections = new Direction[4];
+
+            var moveDirections = new Direction[4];
             moveDirections[0] = prevBestDirection;
             int directionIndex = 1;
-            foreach (Direction direction in directions)
+            foreach (var direction in directions)
             {
                 if (direction != moveDirections[0])
                 {
@@ -200,9 +199,9 @@ namespace Project2048
 
         public double AddSearch(int depth, double alpha, double beta)
         {
-            int hashFlag = hashAlpha;
+            int hashFlag = HashAlpha;
             double val;
-            if ((val = ProbeHash(depth, alpha, beta, out Decision prevDecision)) != infinity)
+            if ((val = ProbeHash(depth, alpha, beta, out var prevDecision)) != Infinity)
             {
                 ++curOff;
                 return val;
@@ -210,11 +209,11 @@ namespace Project2048
             if (depth == 0)
             {
                 val = -Evaluator.EvalForMove(chessBoard);
-                RecordHash(depth, val, hashExact, prevDecision);
+                RecordHash(depth, val, HashExact, prevDecision);
                 return val;
             }
-            Position[] addPositions = SortedPositions(prevDecision);
-            foreach (Position position in addPositions)
+            var addPositions = SortedPositions(prevDecision);
+            foreach (var position in addPositions)
             {
                 foreach (int level in addLevels)
                 {
@@ -223,12 +222,12 @@ namespace Project2048
                     chessBoard.SetEmpty(position);
                     if (val >= beta)
                     {
-                        RecordHash(depth, beta, hashBeta, prevDecision);
+                        RecordHash(depth, beta, HashBeta, prevDecision);
                         return beta;
                     }
                     if (val > alpha)
                     {
-                        hashFlag = hashExact;
+                        hashFlag = HashExact;
                         prevDecision.bestPosition = position;
                         alpha = val;
                     }
@@ -241,17 +240,17 @@ namespace Project2048
         private Position[] SortedPositions(Decision prevDecision)
         {
 
-            List<Position> emptyPositions = chessBoard.GetEmptyPositions();
-            Position prevBestPosition = prevDecision.bestPosition;
+            var emptyPositions = chessBoard.GetEmptyPositions();
+            var prevBestPosition = prevDecision.bestPosition;
             if (prevBestPosition is null)
             {
                 return emptyPositions.ToArray();
             }
-            Position[] addPositions;
-            addPositions = new Position[emptyPositions.Count];
+
+            var addPositions = new Position[emptyPositions.Count];
             addPositions[0] = prevBestPosition;
             int positionIndex = 1;
-            foreach (Position position in emptyPositions)
+            foreach (var position in emptyPositions)
             {
                 if (position != addPositions[0])
                 {

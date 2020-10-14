@@ -75,7 +75,7 @@ namespace Project2048MSTest
         {
             var chessBoard = GetTestBoard1();
             chessBoard.Print();
-            var AI = new BoardsCacheAlphaBetaAI(chessBoard);
+            var AI = new BoardsCacheAlphaBetaAi(chessBoard);
             var direction = AI.GetMoveDirection();
             Assert.AreNotEqual(direction, Settings.Direction.Down);
         }

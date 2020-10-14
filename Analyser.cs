@@ -7,20 +7,20 @@ namespace Project2048
     /// <summary>
     /// 分析棋盘数据
     /// </summary>
-    class Analyser : IMoveTracker, IRoundTracker, ICompleteTracker
+    internal class Analyser : IMoveTracker, IRoundTracker, ICompleteTracker
     {
-        private const int maxRound = Settings.MaxRound;
+        private const int MaxRound = Settings.maxRound;
         private readonly Dictionary<int, int> valueCountMap = new Dictionary<int, int>();
         private TimeRecorder roundTimeRecorder;
         private TimeRecorder moveTimeRecorder;
-        private int moveCount = 0;
-        private double totalMoveMilliSeconds = 0;
-        private static double roundTotalDepth = 0;
-        private static double gameTotalDepth = 0;
-        private static int round = 0;
+        private int moveCount;
+        private double totalMoveMilliSeconds;
+        private static double roundTotalDepth;
+        private static double gameTotalDepth;
+        private static int round;
 
-        private static double roundTotalCutOff = 0;
-        private static double gameTotalCutOff = 0;
+        private static double roundTotalCutOff;
+        private static double gameTotalCutOff;
         public static void StoreDepth(int depth)
         {
             roundTotalDepth += depth;
@@ -70,7 +70,7 @@ namespace Project2048
         }
         private void PrintValuesPossibilities()
         {
-            List<int> reachedValues = valueCountMap.Keys.ToList();
+            var reachedValues = valueCountMap.Keys.ToList();
             reachedValues.Sort((x, y) => y.CompareTo(x));
             for (int i = 0; i < reachedValues.Count; ++i)
             {
@@ -103,8 +103,8 @@ namespace Project2048
         }
         public void OnComplete()
         {
-            Console.WriteLine("\t全局平均搜索深度为:\t{0}", gameTotalDepth / maxRound);
-            Console.WriteLine("\t全局平均置换表裁剪为:\t{0}", gameTotalCutOff / maxRound);
+            Console.WriteLine("\t全局平均搜索深度为:\t{0}", gameTotalDepth / MaxRound);
+            Console.WriteLine("\t全局平均置换表裁剪为:\t{0}", gameTotalCutOff / MaxRound);
 
         }
 

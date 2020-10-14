@@ -2,7 +2,7 @@
 {
     public class Settings
     {
-        public enum Direction : int
+        public enum Direction
         {
             Up = 0,
             Down = 1,
@@ -15,11 +15,11 @@
             Direction.Up, Direction.Down, Direction.Left, Direction.Right,
         };
 
-        public const int MaxSearchMilliSecs = 100;
+        public const int maxSearchMilliSecs = 100;
 
-        public const int MaxRound = 50;
-        public const bool PrintProcess = false;
-        public const bool OnAnalyse = true;
-        public const bool OnEvolve = false;
+        public const int maxRound = 50;
+        public const bool printProcess = false;
+        public const bool onAnalyse = true;
+        public const bool onEvolve = false;
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 namespace Project2048
 {
@@ -15,8 +14,8 @@ namespace Project2048
             var emptyPositions = chessBoard.GetEmptyPositions();
             var candidates = new Candidates
             {
-                [addLevels[0]] = new List<Position>(emptyPositions),
-                [addLevels[1]] = new List<Position>(emptyPositions)
+                [AddLevels[0]] = new List<Position>(emptyPositions),
+                [AddLevels[1]] = new List<Position>(emptyPositions)
             };
             return candidates;
         }
@@ -27,24 +26,25 @@ namespace Project2048
             return candidates;
         }
         private double minEval = double.MaxValue;
-        protected static readonly int[] addLevels = ChessBoard.AddLevels;
-        public int[] Levels { get { return addLevels; } }
+        protected static readonly int[] AddLevels = ChessBoard.AddLevels;
+        public int[] Levels => AddLevels;
+
         private void ChooseAnnoyingChess(ChessBoard chessBoard)
         {
-            this[addLevels[0]] = new List<Position>();
-            this[addLevels[1]] = new List<Position>();
+            this[AddLevels[0]] = new List<Position>();
+            this[AddLevels[1]] = new List<Position>();
             var emptyPositions = chessBoard.GetEmptyPositions();
-            foreach (int level in addLevels)
+            foreach (int level in AddLevels)
             {
-                foreach (Position position in emptyPositions)
+                foreach (var position in emptyPositions)
                 {
                     chessBoard.AddNew(position, level);
                     double eval = Evaluator.EvalForAdd(chessBoard);
                     if (eval < minEval)
                     {
                         minEval = eval;
-                        this[addLevels[0]].Clear();
-                        this[addLevels[1]].Clear();
+                        this[AddLevels[0]].Clear();
+                        this[AddLevels[1]].Clear();
 
                     }
 

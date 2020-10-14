@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace Project2048
 {
@@ -64,7 +65,7 @@ namespace Project2048
         }
         public override int GetHashCode() { return Value.GetHashCode(); }
 
-        public override string ToString() { return Value.ToString(); }
+        public override string ToString() { return Value.ToString(CultureInfo.InvariantCulture); }
 
 
     }

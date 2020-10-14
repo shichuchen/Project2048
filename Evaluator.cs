@@ -13,10 +13,10 @@ namespace Project2048
         {
             CacheLineWeights();
         }
-        public static readonly Weights weights = new Weights();
-        public const double Infinity = double.MaxValue;
-        private const int LineMaxValue = ChessBoard.LineMaxValue;
-        private const Board RowMask = BitBoardHandler.RowMask;
+        public static readonly Weights Weights = new Weights();
+        public const double infinity = double.MaxValue;
+        private const int LineMaxValue = ChessBoard.lineMaxValue;
+        private const Board RowMask = BitBoardHandler.rowMask;
         private static readonly double[] moveScores = new double[LineMaxValue];
         private static readonly double[] addScores = new double[LineMaxValue];
         /// <summary>
@@ -33,8 +33,8 @@ namespace Project2048
         }
         private static void GetCacheLineEmptySumMerges(int line)
         {
-            double sumPower = weights.SumPower;
-            int[] levels = BitBoardHandler.ToLevels((Line)line);
+            double sumPower = Weights.SumPower;
+            var levels = BitBoardHandler.ToLevels((Line)line);
             double lineSum = 0;
             double lineEmpty = 0;
             double lineMerges = 0;
@@ -68,13 +68,13 @@ namespace Project2048
                 lineMerges += (1 + counter);
             }
             moveScores[line] +=
-                    lineEmpty * weights.EmptyWeight
-                    + lineMerges * weights.MergeWeight
-                    - lineSum * weights.SumWeight;
+                    lineEmpty * Weights.EmptyWeight
+                    + lineMerges * Weights.MergeWeight
+                    - lineSum * Weights.SumWeight;
         }
         private static void GetCacheLineMono(int line)
         {
-            double monoPower = weights.MoveMonoPower;
+            double monoPower = Weights.MoveMonoPower;
             var levels = BitBoardHandler.ToLevels((Line)line);
             double lineMonoLeft = 0;
             double lineMonoRight = 0;
@@ -89,12 +89,12 @@ namespace Project2048
                     lineMonoRight += Math.Pow(levels[i], monoPower) - Math.Pow(levels[i - 1], monoPower);
                 }
             }
-            moveScores[line] -= Math.Min(lineMonoLeft, lineMonoRight) * weights.MonoWeight;
+            moveScores[line] -= Math.Min(lineMonoLeft, lineMonoRight) * Weights.MonoWeight;
         }
 
         private static void CacheLineSmooth(int line)
         {
-            double smoothPower = weights.SmoothPower;
+            double smoothPower = Weights.SmoothPower;
             var levels = BitBoardHandler.ToLevels((Line)line);
             double lineSmooth = 0;
             for (int i = 0; i < 3; ++i)
@@ -112,13 +112,13 @@ namespace Project2048
                 }
 
             }
-            addScores[line] = lineSmooth * weights.SmoothWeight;
+            addScores[line] = lineSmooth * Weights.SmoothWeight;
         }
 
         public static void PrintWeights()
         {
             Console.WriteLine("\tEvaluator:");
-            Console.WriteLine(weights);
+            Console.WriteLine(Weights);
             Console.WriteLine("\n");
         }
         public static double EvalForMove(ChessBoard chessBoard)

@@ -11,14 +11,14 @@ namespace Project2048
         }
         public double GetTotalMilliSeconds()
         {
-            TimeSpan endTime = new TimeSpan(DateTime.Now.Ticks);
+            var endTime = new TimeSpan(DateTime.Now.Ticks);
             return endTime.Subtract(startTimeSpan).TotalMilliseconds;
         }
 
         public double GetTotalSeconds()
         {
 
-            TimeSpan endTime = new TimeSpan(DateTime.Now.Ticks);
+            var endTime = new TimeSpan(DateTime.Now.Ticks);
             return endTime.Subtract(startTimeSpan).TotalSeconds;
         }
 

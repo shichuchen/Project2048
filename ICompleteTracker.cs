@@ -1,6 +1,6 @@
 ﻿namespace Project2048
 {
-    interface ICompleteTracker
+    internal interface ICompleteTracker
     {
         void OnComplete();
     }
